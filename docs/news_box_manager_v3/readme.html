@@ -2,7 +2,7 @@
 <html dir="ltr" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>News Box Manager for Zen Cart&reg; v1.5.1 through v1.5.5f</title>
+<title>News Box Manager for Zen Cart&reg; v1.5.5 through v1.5.6c</title>
 
 <style type="text/css">
 <!--
@@ -20,13 +20,14 @@ ol li, ul li { margin: 5px 0; }
 img { margin-left: 20px; max-width: 95%; }
 .smaller { font-size: smaller; }
 .added { color: blue; }
+.removed { text-decoration: line-through; }
 -->
 </style>
 </head>
 
 <body>
-<h1>News Box Manager &mdash; for Zen Cart v1.5.1 through v1.5.5f</h1>
-<h3>Version 2.2.1</h3>
+<h1>News Box Manager &mdash; for Zen Cart v1.5.5 through v1.5.6c</h1>
+<h3>Version 3.0.0</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?216422" target="_blank">News Box Manager v2.0.0 [Support Thread]</a></p>
 <p>GitHub repository: <a href="https://github.com/lat9/news_box_manager" target="_blank">https://github.com/lat9/news_box_manager</a></p>
 <p>This plugin represents a restructuring of the <a href="https://www.zen-cart.com/downloads.php?do=file&id=147" target="_blank">News Box Manager, v1-5</a> for Zen Cart v1.3.x, enabling the plugin to support current Zen Cart and PHP versions.</p>
@@ -102,6 +103,53 @@ img { margin-left: 20px; max-width: 95%; }
 
 <h2>Version History</h2>
 <ul>
+  <li>v3.0.0, 2019-09-30:<ul>
+    <li>CHANGE: <b>Totally</b> restructured for continued operation under Zen Carts v1.5.5 and later.</li>
+    <li>The following files were changed/<span class="added">added</span>/<span class="removed">removed</span>:<ol>
+        <li>/includes/classes/observers/auto.news_box_manager_metatags.php <span class="smaller">(Added in v2.2.0)</span></li>
+        <li>/includes/extra_datafiles/news_box_manager_file_database_names.php</li>
+        <li><span class="added">/includes/languages/english/all_articles.php</span></li>
+        <li><span class="added">/includes/languages/english/article.php</span></li>
+        <li>/includes/languages/english/more_news.php</li>
+        <li>/includes/languages/english/news_archive.php</li>
+        <li>/includes/languages/english/extra_definitions/news_box_manager_defines.php</li>
+        <li><span class="removed">/includes/languages/german/more_news.php</span></li>
+        <li><span class="removed">/includes/languages/german/news_archive.php</span></li>
+        <li><span class="removed">/includes/languages/german/extra_definitions/news_box_manager_defines.php</span></li>
+        <li>/includes/modules/news_box_format.php</li>
+        <li><span class="added">/includes/modules/pages/all_articles/header_php.php</span></li>
+        <li><span class="added">/includes/modules/pages/article/header_php.php</span></li>
+        <li>/includes/modules/pages/more_news/header_php.php</li>
+        <li>/includes/modules/pages/news_archive/header_php.php</li>
+        <li>/includes/modules/sideboxes/news_box_sidebox.php</li>
+        <li><span class="added">/includes/modules/sideboxes/news_box_sidebox2.php</span></li>
+        <li>/includes/templates/template_default/sideboxes/tpl_news_box_sidebox.php</li>
+        <li><span class="added">/includes/templates/template_default/templates/tpl_all_articles_default.php</span></li>
+        <li><span class="added">/includes/templates/template_default/templates/tpl_article_default.php</span></li>
+        <li>/includes/templates/template_default/templates/tpl_modules_news_box_format.php</li>
+        <li>/includes/templates/template_default/templates/tpl_more_news_default.php</li>
+        <li>/includes/templates/template_default/templates/tpl_news_archive.php</li>
+        <li>/includes/templates/YOUR_TEMPLATE/css/stylesheet_news_box_manager.css</li>
+        <li><span class="added">/includes/templates/YOUR_TEMPLATE/jscript/jscript_sidebox_slider.js</span></li>
+        <li><span class="template">/includes/templates/YOUR_TEMPLATE/templates/tpl_index_default.php</span></li>
+        <li>/YOUR_ADMIN/news_box_manager.php</li>
+        <li><span class="added">/YOUR_ADMIN/news_box_manager1.php</span></li>
+        <li><span class="added">/YOUR_ADMIN/news_box_manager2.php</span></li>
+        <li><span class="added">/YOUR_ADMIN/news_box_manager3.php</span></li>
+        <li><span class="added">/YOUR_ADMIN/news_box_manager4.php</span></li>
+        <li>/YOUR_ADMIN/includes/auto_loaders/config.news_box_manager.php</li>
+        <li>/YOUR_ADMIN/includes/extra_datafiles/news_box_manager_file_database_names.php</li>
+        <li>/YOUR_ADMIN/includes/extra_datafiles/news_box_manager_sanitization.php</li>
+        <li><span class="added">/YOUR_ADMIN/includes/functions/news_box_manager_functions.php</span></li>
+        <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
+        <li><span class="added">/YOUR_ADMIN/includes/init_includes/news_box_manager_install.php</span></li>
+        <li><span class="added">/YOUR_ADMIN/includes/init_includes/news_box_manager_update.php</span></li>
+        <li>/YOUR_ADMIN/includes/languages/english/news_box_manager.php</li>
+        <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/news_box_manager_menu_name.php</li>
+        <li><span class="removed">/YOUR_ADMIN/includes/languages/german/news_box_manager.php</span></li>
+        <li><span class="removed">/YOUR_ADMIN/includes/languages/german/extra_definitions/news_box_manager_menu_name.php</span></li>
+    </ol></li>
+  </ul></li>
   <li>v2.2.1, 2019-04-22:<ul>
     <li>BUGFIX: Correct initial-install issue introduced in v2.2.0 (missing meta-tags fields).</li>
     <li>BUGFIX: Correct unwanted &lt;br /&gt;'s added on <code>more_news</code> page.</li>

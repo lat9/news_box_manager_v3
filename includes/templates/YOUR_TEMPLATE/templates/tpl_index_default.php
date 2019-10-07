@@ -41,7 +41,10 @@
 
 <?php
 //-bof-news_box_manager-lat9  *** 1 of 1 ***
-  require ($template->get_template_dir('tpl_modules_news_box_format.php', DIR_WS_TEMPLATE, $current_page_base, 'templates'). '/tpl_modules_news_box_format.php');
+$mnbf = $template->get_template_dir('tpl_modules_news_box_format.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_modules_news_box_format.php';
+if (file_exists($mnbf)) {
+    require $mnbf;
+}
 //-eof-news_box_manager-lat9  *** 1 of 1 ***
 ?>
 
