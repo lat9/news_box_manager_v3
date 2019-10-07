@@ -1,0 +1,27 @@
+
+This contribution was written by geeks4u.com and I have left the original files list and notice
+below intact.
+
+I have updated this contribution, corrected the sql to work with the patch tool and fixed a few 
+bugs as well as correct the code so it will now work with Register Globals off.
+
+
+Enjoy!
+
+Jeff Dripps
+jeffdripps@isegames.com
+
+
++----------------------------------------------------------------------+
+| Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
+| Dedicated to Memory of Amelita "Emmy" Abordo Gelarderes              |
++----------------------------------------------------------------------+
+
+Hello to everyone in the Zen-Cart community and my best regards to the Zen-Cart team and especially Kim.
+It took a little while but finally I've managed to find enough time to modify the News Manager for ZC 1.2 and release it to the community.
+I hope you will enjoy this release, which although functional is still far from finished.
+I'm sure I'll be changing things and adding more functionality, but right now I just wanted to release it, because the News Manager has been highly anticipated by ZC users.
+As you have noticed I dedicated this release to someone from our family that tragically past away while I was coding the News Manager. Please leave in place my notice of dedication.
+As always your feedback is welcomed. Please post it on ZC website in Support Forum/Contributions/News Box Manager.
+Furthermore I promise you that any donations will not be rejected. You can send them via PayPal to geeks4u_donations@netideas.org
+Enjoy.

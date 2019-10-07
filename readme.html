@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>News Box Manager for Zen Cart&reg; v1.5.1 through v1.5.5f</title>
+
+<style type="text/css">
+<!--
+a, a:active, a:visited { color: #006666; text-decoration: none; }
+a:hover { color:#00CC99; text-decoration: underline; }
+body, p, h1, h2, h3, h4, h5, h6, li, td, dd, dt { font-family: Verdana, AvantGarde, Tahoma, Arial, sans-serif; font-size: 10pt; color: black; padding: 0px; margin: 20px; }
+pre { margin: 20px; }
+H1, H2, H3, H4 { font-weight: bold; border: 1px solid #444; padding: 0.3em; }
+h1 { font-size: 20px; background-color: #f3e5ab; }
+h2 { font-size: 16px; background-color: #fff8c6; }
+h3 { background-color: #ffffc2; }
+ol li, ul li { margin: 5px 0; }
+.corefile, .impt { color: red; }
+.template { color: green; }
+img { margin-left: 20px; max-width: 95%; }
+.smaller { font-size: smaller; }
+.added { color: blue; }
+-->
+</style>
+</head>
+
+<body>
+<h1>News Box Manager &mdash; for Zen Cart v1.5.1 through v1.5.5f</h1>
+<h3>Version 2.2.1</h3>
+<p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?216422" target="_blank">News Box Manager v2.0.0 [Support Thread]</a></p>
+<p>GitHub repository: <a href="https://github.com/lat9/news_box_manager" target="_blank">https://github.com/lat9/news_box_manager</a></p>
+<p>This plugin represents a restructuring of the <a href="https://www.zen-cart.com/downloads.php?do=file&id=147" target="_blank">News Box Manager, v1-5</a> for Zen Cart v1.3.x, enabling the plugin to support current Zen Cart and PHP versions.</p>
+
+<h2>Purpose</h2>
+<p>This plugin adds a <em>Latest News</em> side-box and home-page center-box with an admin-level news editor to your Zen Cart. You create news articles using the tool <em>Localization-&gt;News Box Manager</em>, which are displayed in the side- and center-boxes (based on your chosen configuration).</p>
+<p>The news articles you write have a <em>Start Date</em> and <em>End Date</em> (which can be set to &quot;--none--&quot;), which determine whether or not the article is displayed to your customers.  Articles are displayed if the article's status is <em>Enabled</em>, the <em>Start Date</em> is on or after the current date and the <em>End Date</em> is either &quot;--none--&quot; or on or before the current date.  That way, you can write an article today that isn't displayed to your customers until sometime next week.</p>
+<p>Starting with v2.2.0, you can define article-specific <em>metatags</em> using the plugin's admin tool.  Your customizations appear in an article's storefront rendering on the <code>more_news</code> page &mdash; so long as your store is using Zen Cart v1.5.5 or later!  The restriction is in place since the &quot;notifier&quot; used by the plugin's auto-loaded &quot;observer&quot; was not defined for previous Zen Cart versions.</p>
+
+<h3>Admin Interfaces</h3>
+<p>Once you have copied the admin-level files to your cart's file system, you will see two new menu items:</p>
+<ol>
+  <li><em>Configuration-&gt;News Box Manager</em>, where you control the plugin's settings.</li>
+  <li><em>Tools-&gt;News Box Manager</em>, where you write and manage your store's news articles.  If you have an HTML editor installed in your admin, you can use that editor to edit/create your news articles.  If you have multiple languages in your store, you can write language-specific articles, too.<br /><br /><b>Note:</b> For previous versions, this tool was located under the &quot;Localization&quot; menu.</li>
+</ol>
+
+<h3>Customer Interfaces</h3>
+<p>On your store-side, once you have installed and enabled the plugin there are various new elements to be shown to your customers:</p>
+<ol>
+  <li>The <em>Latest News</em> sidebox.  Displays the titles of the most-recent news articles, if enabled by your admin's <em>Tools-&gt;Layout Box Controller</em>.</li>
+  <li>The <em>Latest News</em> centerbox on your home page.  Displays the release date and title of the most-recent news articles, if enabled by the setting in <em>Configuration-&gt;News Box Manager</em>.</li>
+  <li>The <em>News Archive</em> page.  Displays the full list of active news articles.</li>
+  <li>The <em>More News</em> page.  Displays the contents of a selected news article.</li>
+</ol>
+<p><strong>Note:</strong> If you have defined <em>metatags</em> for a news-article, those entries (if not empty) will be used instead of the Zen Cart defaults when the article is viewed on the <code>more_news</code> page.</p>
+
+<h2>Installation</h2>
+<p>This plugin has no <span class="corefile">core-file overwrite</span>, but one <span class="template">template-override</span> file; you should <strong>always</strong> backup your cart's database and files prior to making any changes.</p>
+<ol>
+  <li>Unzip the plugin's package file, which you've most likely already done if you're reading this!</li>
+  <li>Rename the /YOUR_ADMIN directory to match your Zen Cart's secret admin-folder name.</li>
+  <li>Rename the one template-override directory (/includes/templates/YOUR_TEMPLATE) to match your cart's active template folder.</li>
+  <li>If you've made previous changes to <span class="template">/includes/templates/YOUR_TEMPLATE/templates/tpl_index_default.php</span>, you'll need to merge those changes with this plugin's updates (one marked section).</li>
+  <li>Log into your Zen Cart's admin-console.</li>
+  <li>Copy <b>only</b> the plugin's <b>admin-level</b> files to your store's file system.<ol>
+    <li>/YOUR_ADMIN/news_box_manager.php</li>
+    <li>/YOUR_ADMIN/includes/auto_loaders/config.news_box_manager.php</li>
+    <li>/YOUR_ADMIN/includes/extra_datafiles/news_box_manager_file_database_names.php</li>
+    <li>/YOUR_ADMIN/includes/extra_datafiles/news_box_manager_sanitization.php <span class="smaller">(Added in v2.1.1)</span></li>
+    <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
+    <li>/YOUR_ADMIN/includes/languages/english/news_box_manager.php</li>
+    <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/news_box_manager_menu_name.php</li>
+    <li>/YOUR_ADMIN/includes/languages/german/news_box_manager.php</li>
+    <li>/YOUR_ADMIN/includes/languages/german/extra_definitions/news_box_manager_menu_name.php</li>
+  </ol></li>
+  <li>Click the &quot;Admin Home&quot; link in the admin header; that will cause this plugin's initialization script to run, creating the necessary database tables and configuration items.</li>
+  <li>Copy the plugin's <b>store-side</b> files to your store's file system.<ol>
+    <li>/includes/classes/observers/auto.news_box_manager_metatags.php <span class="smaller">(Added in v2.2.0)</span></li>
+    <li>/includes/extra_datafiles/news_box_manager_file_database_names.php</li>
+    <li>/includes/languages/english/more_news.php</li>
+    <li>/includes/languages/english/news_archive.php</li>
+    <li>/includes/languages/english/extra_definitions/news_box_manager_defines.php</li>
+    <li>/includes/languages/german/more_news.php</li>
+    <li>/includes/languages/german/news_archive.php</li>
+    <li>/includes/languages/german/extra_definitions/news_box_manager_defines.php</li>
+    <li>/includes/modules/news_box_format.php</li>
+    <li>/includes/modules/pages/more_news/header_php.php</li>
+    <li>/includes/modules/pages/news_archive/header_php.php</li>
+    <li>/includes/modules/sideboxes/news_box_sidebox.php</li>
+    <li>/includes/templates/template_default/sideboxes/tpl_news_box_sidebox.php</li>
+    <li>/includes/templates/template_default/templates/tpl_modules_news_box_format.php</li>
+    <li>/includes/templates/template_default/templates/tpl_more_news_default.php</li>
+    <li>/includes/templates/template_default/templates/tpl_news_archive.php</li>
+    <li>/includes/templates/YOUR_TEMPLATE/css/stylesheet_news_box_manager.css</li>
+    <li><span class="template">/includes/templates/YOUR_TEMPLATE/templates/tpl_index_default.php</span></li>
+  </ol></li>
+  <li>Go to your admin's <em>Configuration-&gt;News Box Manager</em> to view and change any settings, then to to <em>Localization-&gt;News Box Manager</em> to start writing!</li>
+</ol>
+<p>Follow the instructions above if you are <em>upgrading</em>, too.  If you've made <em>template-override</em> versions of the plugin's template-files, you'll need to merge your changes with any updates provided by the plugin itself.</p>
+
+<h2>Un-Installing</h2>
+<p>To un-install this plugin, first remove all the new files introduced by this plugin and restore the <span class="template">template-override</span> file.  Then open the plugin's <code>/uninstall_news_box_manager.sql</code>, copy and paste the file's contents into your admin's <em>Tools-&gt;Install SQL Patches</em> and click &quot;Send&quot;.  That will remove all configuration settings and plugin-specific tables from your database.</p>
+
+<h2>Version History</h2>
+<ul>
+  <li>v2.2.1, 2019-04-22:<ul>
+    <li>BUGFIX: Correct initial-install issue introduced in v2.2.0 (missing meta-tags fields).</li>
+    <li>BUGFIX: Correct unwanted &lt;br /&gt;'s added on <code>more_news</code> page.</li>
+    <li>The following files were changed:<ol>
+      <li>/includes/modules/pages/more_news/header_php.php</li>
+      <li>/YOUR_ADMIN/init_includes/init_news_box_manager_admin.php</li>
+    </ol></li>
+  </ul></li>
+  <li>v2.2.0, 2018-09-17:<ul>
+    <li>BUGFIX: Dates stored as <code>0000-00-00</code>; need correction for more recent versions of MySQL.</li>
+    <li>CHANGE: Updates to include article-specific metatag definitions.</li>
+    <li>The following files were changed/<span class="added">added</span>:<ol>
+      <li><span class="added">/includes/classes/observers/auto.news_box_manager_metatags.php</span></li>
+      <li>/includes/modules/news_box_format.php</li>
+      <li>/includes/modules/pages/more_news/header_php.php</li>
+      <li>/includes/modules/sideboxes/news_box_sidebox.php</li>
+      <li>/includes/templates/template_default/templates/tpl_more_news_default.php</li>
+      <li>/YOUR_ADMIN/news_box_manager.php</li>
+      <li>/YOUR_ADMIN/init_includes/init_news_box_manager_admin.php</li>
+      <li>/YOUR_ADMIN/languages/english/news_box_manager.php</li>
+      <li>/YOUR_ADMIN/languages/english/extra_definitions/news_box_manager_menu_name.php</li>
+      <li>uninstall_news_box_manager.sql</li>
+    </ol></li>
+  </ul></li>
+  <li>v2.1.1, 2016-10-12:<ul>
+    <li>BUGFIX: Additional &quot;sanitization&quot; needed for Zen Cart 1.5.5 and later.</li>
+    <li>The following files were changed/<span class="added">added</span>:<ol>
+      <li>/YOUR_ADMIN/news_box_manager.php</li>
+      <li><span class="added">/YOUR_ADMIN/includes/extra_datafiles/news_box_manager_sanitization.php</span></li>
+    </ol></li>
+  </ul></li>
+  <li>v2.1.0, 2015-03-31:<ul>
+    <li>BUGFIX: Correct messaging and article-replication issues within the admin tool after an error is detected during an article's save action.</li>
+    <li>BUGFIX: Pick up previously-missed change to the store-side language file.</li>
+    <li>CHANGE: Add configuration switches to allow some, all or none of an article's content to be displayed in the home-page center-box and the &quot;News Archive&quot; page.</li>
+    <li>The following files were changed:<ol>
+      <li>/includes/languages/english/extra_definitions/news_box_manager_defines.php</li>
+      <li>/includes/modules/news_box_format.php</li>
+      <li>/includes/modules/pages/news_archive/header_php.php</li>
+      <li>/includes/templates/template_default/templates/tpl_modules_news_box_format.php</li>
+      <li>/includes/templates/template_default/templates/tpl_news_archive.php</li>
+      <li>/YOUR_ADMIN/news_box_manager.php</li>
+      <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
+    </ol></li>
+  </ul></li>
+  <li>v2.0.0, 2015-03-03:<ul>
+    <li>Initial release for Zen Cart v1.5.1 through v1.5.4.</li>
+  </ul></li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+#newsscrollbox ol { margin: 0; padding: 0; list-style-position: inside; }
+
+#moreNewsDefault .news_header { font-weight: bold; padding-right: 0.3em; }
+#moreNewsDefault .newsContent { padding: 0.3em 0; }
+
+#news-table { display: table; border-collapse: collapse; width: 100%; margin: 0.8em 0; }
+.news-row { display: table-row; border: 1px solid #444; }
+.news-heading { font-weight: bold; }
+.news-cell { display: table-cell; padding: 0.5em; border: 1px solid #444; }
