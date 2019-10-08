@@ -21,10 +21,10 @@ define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_NEWS_TITLE', 'News Title:');
 define('TEXT_NEWS_CONTENT', 'News Content:');
-define('TEXT__NEWS_CONTENT', 'News Content:');
 define('TEXT_NEWS_METATAGS_TITLE', 'Metatags Title:');
 define('TEXT_NEWS_METATAGS_DESCRIPTION', 'Metatags Description:');
 define('TEXT_NEWS_METATAGS_KEYWORDS', 'Metatags Keywords:');
+define('NEWS_BOX_NAME_ALL', 'All');
 
 define('TEXT_NEWS_METATAGS_DISCLAIMER', '<b>Note:</b> News articles\' metatags are available for installations using Zen Cart 1.5.5 or later!');
 
