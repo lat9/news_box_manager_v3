@@ -12,11 +12,11 @@
 // -----
 // Pull in the storefront's extra_definitions, contains the BOX_NEWS_NAME_TYPEx definitions.
 //
-$nbm_language_file = '/extra_definitions/news_box_manager_defines.php';
-if (file_exists(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . $nbm_language_file)) {
-    $nbm_language_file = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . $nbm_language_file;
+$nbm_language_file = '/news_box_manager_defines.php';
+if (file_exists(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/' . $template_dir . $nbm_language_file)) {
+    $nbm_language_file = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/' . $template_dir . $nbm_language_file;
 } else {
-    $nbm_language_file = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . $nbm_language_file;
+    $nbm_language_file = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions' . $nbm_language_file;
 }
 require $nbm_language_file; 
 
