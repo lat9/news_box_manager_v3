@@ -45,7 +45,6 @@ if ($news_box_script_name == FILENAME_NEWS_BOX_MANAGER . '.php') {
     require DIR_WS_LANGUAGES . $_SESSION['language'] . '/news_box_manager.php';
     $news_box_name_type = 'NEWS_BOX_NAME_TYPE' . $news_box_type;
     $news_type_name = (defined($news_box_name_type)) ? constant($news_box_name_type) : ($news_box_name_type . TEXT_NEWS_TYPE_NAME_UNKNOWN);
-
 }
 
 // -----
@@ -137,7 +136,7 @@ switch ($action) {
         $nID = (int)$_POST['nID'];
         $db->Execute("DELETE FROM " . TABLE_BOX_NEWS . " WHERE box_news_id = $nID");
         $db->Execute("DELETE FROM " . TABLE_BOX_NEWS_CONTENT . " WHERE box_news_id = $nID");
-        zen_redirect(zen_href_link($news_box_script_name, (isset($_GET['page']) ? ('page=' . (int)$_GET['page']) : '')));
+        zen_redirect(zen_href_link($news_box_script_name, (isset($_GET['page'])) ? "page=$nbm_page" : ''));
         break;
         
     case 'status':
@@ -158,7 +157,7 @@ switch ($action) {
                   LIMIT 1"
             );
         }
-        zen_redirect (zen_href_link ($news_box_script_name, "nID=$nID$page_link"));
+        zen_redirect(zen_href_link($news_box_script_name, "nID=$nID$page_link"));
         break;
 
     case 'set_editor':
@@ -191,8 +190,8 @@ switch ($action) {
 .green { color: green; }
 .red { color: red; }
 .meta-tags { text-align: center; padding: 0.5em 0; }
-.nb-right { text-align: right; }
-.nb-center { text-align: center; }
+.large { font-size: large; }
+.larger { font-size: larger; }
 .smaller { font-size: smaller; }
 -->
 </style>
@@ -225,8 +224,25 @@ if ($editor_handler != '') {
 <!-- header_eof //-->
 <!-- body //-->
 <div class="container-fluid">
-    <h1><?php echo NEWS_BOX_HEADING_TITLE; ?> <span class="smaller"><?php echo sprintf(NEWS_BOX_HEADING_SUBTITLE, $news_type_name); ?></span></h1>
 <?php
+switch ($action) {
+    case 'new':
+        $subheading = (empty($_GET['nID'])) ? NEWS_BOX_SUBHEADING_NEW : NEWS_BOX_SUBHEADING_EDIT;
+        break;
+    case 'preview':
+    case 'previewonly':
+        $subheading = NEWS_BOX_SUBHEADING_PREVIEW;
+        break;
+    default:
+        $subheading = sprintf(NEWS_BOX_SUBHEADING_LISTING, $news_type_name);
+        break;
+}
+?>
+    <h1><?php echo NEWS_BOX_HEADING_TITLE; ?> <span class="smaller"><?php echo $subheading; ?></span></h1>
+<?php
+// -----
+// Editing an existing article or inserting a new one ...
+//
 if ($action == 'new') {
     $form_action = 'insert';
     $parameters = array( 
@@ -358,11 +374,7 @@ if ($action == 'new') {
                                     </tr>
                                 </table></td>
                             </tr>
-                            
-                            <tr>
-                                <td colspan="2" class="meta-tags"><?php echo TEXT_NEWS_METATAGS_DISCLAIMER; ?></td>
-                            </tr>
-                            
+
                             <tr>
                                 <td class="main"><?php echo TEXT_NEWS_METATAGS_TITLE; ?></td>
                                 <td class="main"><?php echo $lang_image . '&nbsp;&nbsp;' . zen_draw_input_field("news_metatags_title[$lang_id]", $lang_metatags_title, $metatags_title_max_length); ?></td>
@@ -409,35 +421,109 @@ if ($action == 'new') {
                     </form></td>
                 </tr>
 <?php
-} elseif ($action == 'preview') {
-    $news_title = TEXT_NEWS_TITLE;
-    foreach ($languages as $current_language){
-?>
-                <tr>
-                    <td class="main" colspan="2"><?php echo $news_title; ?></td>
-                </tr>
-                
-                <tr>
-                    <td class="main" colspan="2"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $current_language['directory'] . '/images/' . $current_language['image'], $current_language['name']) . '&nbsp;' .  zen_get_news_title($_GET['nID'], $current_language['id']); ?></td>
-                </tr>
-                
-                <tr>
-                    <td class="main" style="width:<?php echo BOX_WIDTH_LEFT; ?>;">&nbsp;</td>
-                    <td class="main"><div style="height:100%; width:100%; overflow:visible; border:1px solid #ccc;"><?php echo nl2br(zen_get_news_title($_GET['nID'], $current_language['id'])) . '<br /><br />' . nl2br(zen_get_news_content($_GET['nID'], $current_language['id'])); ?></div></td>
-                    <td class="main" style="width:<?php echo BOX_WIDTH_RIGHT; ?>;">&nbsp;</td>
-                </tr>
-<?php
-        $news_title = '&nbsp;';
+// -----
+// Previewing an article (from the listing) or prior to saving changes via edit/insert ...
+//
+} elseif ($action == 'previewonly' || $action == 'preview') {
+    if ($action == 'previewonly') {
+        if (empty($_GET['nID'])) {
+            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+        }
+        
+        $nID = (int)$_GET['nID'];
+        $news_info = $db->Execute(
+            "SELECT *
+               FROM " . TABLE_BOX_NEWS . "
+             WHERE box_news_id = $nID
+             LIMIT 1"
+        );
+        if ($news_info->EOF) {
+            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+        }
+        $news_content_type = $news_info->fields['news_content_type'];
+        $news_added_date = $news_info->fields['news_added_date'];
+        $news_start_date = $news_info->fields['news_start_date'];
+        $news_end_date = $news_info->fields['news_end_date'];
+        $news_status = $news_info->fields['news_status'];
+        unset($news_info);
+        
+        $news_info = $db->Execute(
+            "SELECT *
+               FROM " . TABLE_BOX_NEWS_CONTENT . "
+              WHERE box_news_id = $nID"
+        );
+        if ($news_info->EOF) {
+            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+        }
+        $news_title = array();
+        $news_content = array();
+        $news_metatags_title = array();
+        $news_metatags_keywords = array();
+        $news_metatags_description = array();
+        foreach ($news_info as $news_item) {
+            $lang_id = $news_item['languages_id'];
+            $news_title[$lang_id] = $news_item['news_title'];
+            $news_content[$lang_id] = $news_item['news_content'];
+            $news_metatags_title[$lang_id] = $news_item['news_metatags_title'];
+            $news_metatags_keywords[$lang_id] = $news_item['news_metatags_keywords'];
+            $news_metatags_description[$lang_id] = $news_item['news_metatags_description'];
+        }
+//        unset($news_info);
+        
+        $submit_button = '';
+        $cancel_link = zen_href_link($news_box_script_name, "page=$nbm_page");
+        $cancel_name = IMAGE_BACK;
+    } else {
+        if (empty($_POST)) {
+            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+        }
+        $news_content_type = $_POST['news_content_type'];
+        $news_start_date = $_POST['news_start_date'];
+        $news_end_date = $_POST['news_end_date'];
+        
+        $news_title = $_POST['news_title'];
+        $news_content = $_POST['news_content'];
+        $news_metatags_title = $_POST['news_metatags_title'];
+        $news_metatags_keywords = $_POST['news_metatags_keywords'];
+        $news_metatags_description = $_POST['news_metatags_description'];
     }
 ?>
-                <tr>
-                    <td class="main" colspan="3" align="right"><?php echo '<a href="' . zen_href_link($news_box_script_name, 'nID=' . $_GET['nID']) . $page_link . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
-                </tr>
+    <hr />
+    <div class="row large">
+        <div class="col-sm-1"><strong><?php echo TEXT_NEWS_TYPE; ?></strong></div>
+        <div class="col-sm-2"><?php echo constant("BOX_NEWS_NAME_TYPE$news_content_type"); ?></div>
+
+        <div class="col-sm-1"><strong><?php echo TEXT_NEWS_STATUS; ?></strong></div>
+        <div class="col-sm-2"><?php echo ($news_status == 0) ? TEXT_DISABLED : TEXT_ENABLED; ?></div>
+
+        <div class="col-sm-1"><strong><?php echo TEXT_NEWS_START_DATE; ?></strong></div>
+        <div class="col-sm-2"><?php echo $news_start_date; ?></div>
+
+        <div class="col-sm-1"><strong><?php echo TEXT_NEWS_END_DATE; ?></strong></div>
+        <div class="col-sm-2"><?php echo (empty($news_end_date)) ? TEXT_NEVER : $news_end_date; ?></div>
+    </div>
+    <hr />
 <?php
-} elseif ($action == 'confirm') {
-    $nID = (int)$_GET['nID'];
-    $news = $db->Execute("SELECT news_title, news_content FROM " . TABLE_BOX_NEWS_CONTENT . " WHERE box_news_id = $nID LIMIT 1");
-    $nInfo = new objectInfo($news->fields);
+    $languages = zen_get_languages();
+    foreach ($languages as $current_language) {
+        $lang_id = $current_language['id'];
+?>
+    <div class="row">
+        <div class="col-sm-6 pageHeading">
+          <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $current_language['directory'] . '/images/' . $current_language['image'], $current_language['name']) . '&nbsp;' . $news_title[$lang_id]; ?>
+        </div>
+    </div>
+    <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+    <div class="row"><?php echo $news_content[$lang_id]; ?></div>
+    <hr />
+<?php
+    }
+?>
+   <div class="row text-center"><?php echo $submit_button; ?>&nbsp;<a href="<?php echo $cancel_link; ?>" class="btn btn-default" role="button"><?php echo $cancel_name; ?></a></div>
+<?php
+// -----
+// No special action?  Display the current page's worth of existing articles ...
+//
 } else {
     $news_types = array(
         0 => 'Undefined',
@@ -506,9 +592,9 @@ if ($action == 'new') {
         
         $link_parms = 'nID=' . $news->fields['box_news_id'] . $page_link;
 ?>
-            <tr onclick="document.location.href=\'<?php echo zen_href_link($news_box_script_name, $link_parms);?>'" role="button">
+            <tr onclick="document.location.href='<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=new');?>'" role="button">
                 <td>
-                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=preview');?>"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<?php echo $news->fields['news_title']; ?>
+                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=previewonly');?>"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<?php echo $news->fields['news_title']; ?>
                 </td>
 <?php
         if ($all_news_types) {
@@ -534,7 +620,7 @@ if ($action == 'new') {
                     <input type="image" src="<?php echo DIR_WS_IMAGES . $icon_image; ?>" alt="<?php echo $icon_title; ?>" />
                 </form></td>
                 <td class="text-right">
-                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms); ?>" style="text-decoration: none">
+                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=new'); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg edit"><i class="fa fa-circle fa-stack-2x base"></i><i class="fa fa-pencil fa-stack-1x overlay" aria-hidden="true"></i></div>
                     </a>
                     <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=delete'); ?>" style="text-decoration: none">
@@ -557,13 +643,15 @@ if ($action == 'new') {
 <?php
     $heading = array();
     $contents = array();
-    switch ($action){
+    $cancel_link = '<a href="' . zen_href_link($news_box_script_name, 'nID=' . $nInfo->box_news_id . $page_link) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>';
+    switch ($action) {
         case 'delete':
-            $heading[] = array('text' => '<b>' . $nInfo->news_title . '</b>');
-            $contents = array('form' => zen_draw_form('news', $news_box_script_name, $page_link . '&amp;action=deleteconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id));
+            $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_NEWS . '</h4>');
+            
+            $contents = array('form' => zen_draw_form('news', $news_box_script_name, 'action=deleteconfirm' . $page_link) . zen_draw_hidden_field('nID', $nInfo->box_news_id));
             $contents[] = array('text' => TEXT_NEWS_DELETE_INFO);
-            $contents[] = array('text' => '<br><b>' . $nInfo->news_title . '</b>');
-            $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . ' <a href="' . zen_href_link($news_box_script_name, 'nID=' . $_GET['nID'] . $page_link) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+            $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
+            $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> ' . $cancel_link);
             break;
 
         default:
@@ -588,7 +676,7 @@ if ($action == 'new') {
         <div class="col-sm-4"><?php echo $news_display_count; ?></div>
         <div class="col-sm-4"><?php echo $news_display_links; ?></div>
         <div class="col-sm-4">
-            <a href="<?php echo zen_href_link($news_box_script_name, $page_link . '&amp;action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
+            <a href="<?php echo zen_href_link($news_box_script_name, 'action=new' . $page_link ); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
         </div>
     </div>
 <?php
