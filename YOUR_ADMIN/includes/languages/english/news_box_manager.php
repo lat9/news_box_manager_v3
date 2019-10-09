@@ -39,6 +39,12 @@ define('TEXT_NEWS_DATE_MODIFIED', 'Date Modified:');
 define('TEXT_NEWS_START_DATE', 'News Starts:');
 define('TEXT_NEWS_END_DATE', 'News Ends:');
     define('TEXT_NEVER', 'Never');
+    
+define('TEXT_METATAGS_SHOW_HIDE', 'Show/Hide Metatags');
+define('TEXT_METATAGS_TITLE', 'Metatags Title:');
+define('TEXT_METATAGS_KEYWORDS', 'Metatags Keywords:');
+define('TEXT_METATAGS_DESCRIPTION', 'Metatags Description:');
+    define('TEXT_NOT_ENTERED', 'Not Entered');
 
 define('TEXT_NEWS_TYPE_NAME_UNKNOWN', ' (Unknown)');
 

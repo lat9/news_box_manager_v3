@@ -516,6 +516,21 @@ if ($action == 'new') {
     <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
     <div class="row"><?php echo $news_content[$lang_id]; ?></div>
     <hr />
+    <a href="#metatags-<?php echo $lang_id; ?>" class="btn btn-info" data-toggle="collapse"><?php echo TEXT_METATAGS_SHOW_HIDE; ?></a>
+    <div id="metatags-<?php echo $lang_id; ?>" class="collapse">
+        <div class="row">
+            <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_TITLE; ?></strong></div>
+            <div class="col-sm-10"><?php echo empty($news_metatags_title[$lang_id]) ? TEXT_NOT_ENTERED : $news_metatags_title[$lang_id]; ?></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_KEYWORDS; ?></strong></div>
+            <div class="col-sm-10"><?php echo empty($news_metatags_keywords[$lang_id]) ? TEXT_NOT_ENTERED : $news_metatags_keywords[$lang_id]; ?></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_DESCRIPTION; ?></strong></div>
+            <div class="col-sm-10"><?php echo empty($news_metatags_description[$lang_id]) ? TEXT_NOT_ENTERED : $news_metatags_description[$lang_id]; ?></div>
+        </div>
+    </div>
 <?php
     }
 ?>
