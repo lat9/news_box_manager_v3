@@ -35,28 +35,27 @@ $news_box_query = $db->Execute(
       LIMIT 1"
 );
 if ($news_box_query->EOF) {
-    $news_title = '';
-    $news_content = '';
-    $start_date = false;
-} else {
-    $news_title = $news_box_query->fields['news_title'];
-    $news_content = $news_box_query->fields['news_content'];
-    $news_type = $news_box_query->fields['news_content_type'];
-    
-    $end_date = (!empty($news_box_query->fields['news_end_date']) && $news_box_query->fields['news_end_date'] != '0001-01-01 00:00:00') ? $news_box_query->fields['news_end_date'] : '';
-    $start_date = $news_box_query->fields['news_start_date'];
-    
-    if (NEWS_BOX_DATE_FORMAT == 'short' || (NEWS_BOX_DATE_FORMAT == 'MdY' && !empty($end_date))) {
-        $start_date = zen_date_short($start_date);
-    } elseif (NEWS_BOX_DATE_FORMAT == 'MdY') {
-        $start_date = explode(' ', date('M d Y', strtotime($start_date)));
-    } else {
-        $start_date = zen_date_long($start_date);
-    }
+    $messageStack->add_session(TEXT_NEWS_ARTICLE_NOT_FOUND, 'caution');
+    zen_redirect(zen_href_link(FILENAME_ALL_ARTICLEs));
+}
 
-    if (!empty($end_date)) {
-        $end_date = (NEWS_BOX_DATE_FORMAT == 'short') ? zen_date_short($news_box_query->fields['news_end_date']) : zen_date_long($news_box_query->fields['news_end_date']);
-    }
+$news_title = $news_box_query->fields['news_title'];
+$news_content = $news_box_query->fields['news_content'];
+$news_type = $news_box_query->fields['news_content_type'];
+
+$end_date = (!empty($news_box_query->fields['news_end_date']) && $news_box_query->fields['news_end_date'] != '0001-01-01 00:00:00') ? $news_box_query->fields['news_end_date'] : '';
+$start_date = $news_box_query->fields['news_start_date'];
+
+if (NEWS_BOX_DATE_FORMAT == 'short' || (NEWS_BOX_DATE_FORMAT == 'MdY' && !empty($end_date))) {
+    $start_date = zen_date_short($start_date);
+} elseif (NEWS_BOX_DATE_FORMAT == 'MdY') {
+    $start_date = explode(' ', date('M d Y', strtotime($start_date)));
+} else {
+    $start_date = zen_date_long($start_date);
+}
+
+if (!empty($end_date)) {
+    $end_date = (NEWS_BOX_DATE_FORMAT == 'short') ? zen_date_short($news_box_query->fields['news_end_date']) : zen_date_long($news_box_query->fields['news_end_date']);
 }
 
 $canonicalLink = zen_href_link(FILENAME_ARTICLE, "p=$news_id");

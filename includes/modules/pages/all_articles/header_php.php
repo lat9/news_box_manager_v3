@@ -16,22 +16,22 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 //
 $news_type_name = '';
 $news_and_clause = '';
-if (isset($_GET['t'])) {
-    switch ($_GET['t']) {
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-            $news_box_name_define = "BOX_NEWS_NAME_TYPE" . $_GET['t'];
-            $news_and_clause = ' AND n.news_content_type = ' . $_GET['t'];
-            $news_type_name = (defined($news_box_name_define)) ? constant($news_box_name_define) : "Unknown [$news_sidebox_content]";
-            $canonicalLink = zen_href_link(FILENAME_ALL_ARTICLES, 't=' . $_GET['t']);
-            break;
-        default:
-            $canonicalLink = zen_href_link(FILENAME_ALL_ARTICLES);
-            break;
-    }
+$news_type = (isset($_GET['t'])) ? $_GET['t'] : '';
+switch ($news_type) {
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+        $news_box_name_define = "BOX_NEWS_NAME_TYPE" . $news_type;
+        $news_and_clause = ' AND n.news_content_type = ' . $news_type;
+        $news_type_name = (defined($news_box_name_define)) ? constant($news_box_name_define) : "Unknown [$news_type]";
+        $canonicalLink = zen_href_link(FILENAME_ALL_ARTICLES, "t=$news_type");
+        break;
+    default:
+        $canonicalLink = zen_href_link(FILENAME_ALL_ARTICLES);
+        break;
 }
+
 $breadcrumb->add(sprintf(NAVBAR_TITLE, $news_type_name));
 
 $max_news_items = NEWS_BOX_SHOW_ARCHIVE;
