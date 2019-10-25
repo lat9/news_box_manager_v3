@@ -254,6 +254,34 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
             SET news_content_type = 1
           WHERE news_content_type = 0"
     );
+    
+    // -----
+    // Now, the BIG change.  Previous versions of the 'News Box Manager' allowed a multi-language
+    // store to record news articles with empty titles and/or content so long as there was one language
+    // that *had* content.  v3.0.0 now requires that the titles and content be recorded for **all**
+    // languages.
+    //
+    // If a news article is found to have a blank title or content in *any* of the store's defined
+    // languages, that article is disabled.  A log file is generated to identify which articles have
+    // been disabled.
+    //
+    $nbm_fixups = $db->Execute(
+        "SELECT *
+           FROM " . TABLE_BOX_NEWS_CONTENT
+    );
+    $news_disabled = array();
+    foreach ($nbm_fixups as $next_check) {
+        if (empty(trim($next_check['news_title'])) || empty(trim($next_check['news_content']))) {
+            if (!in_array($next_check['news_box_id'], $news_disabled)) {
+                $news_disabled[] = $next_check['news_box_id'];
+                error_log('News article #' . $next_check['news_box_id'] . ' has been disabled, due to missing content.' . PHP_EOL, 3, DIR_FS_LOGS . '/news_box_manager_articles_disabled.log');
+            }
+        }
+    }
+    if (!empty($news_disabled)) {
+        $messageStack->add(NEWS_BOX_ARTICLES_DISABLED, 'warning');
+    }
+    unset($nbm_fixups, $next_check);
 }
 
 $messageStack->add($nb_message, 'success');
