@@ -270,16 +270,17 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
            FROM " . TABLE_BOX_NEWS_CONTENT
     );
     $news_disabled = array();
+    $nbm_logname = DIR_FS_LOGS . '/news_box_manager_articles_disabled.log';
     foreach ($nbm_fixups as $next_check) {
         if (empty(trim($next_check['news_title'])) || empty(trim($next_check['news_content']))) {
             if (!in_array($next_check['news_box_id'], $news_disabled)) {
                 $news_disabled[] = $next_check['news_box_id'];
-                error_log('News article #' . $next_check['news_box_id'] . ' has been disabled, due to missing content.' . PHP_EOL, 3, DIR_FS_LOGS . '/news_box_manager_articles_disabled.log');
+                error_log('News article #' . $next_check['news_box_id'] . ' has been disabled, due to missing content.' . PHP_EOL, 3, $nbm_logname);
             }
         }
     }
     if (!empty($news_disabled)) {
-        $messageStack->add(NEWS_BOX_ARTICLES_DISABLED, 'warning');
+        $messageStack->add(sprintf(NEWS_BOX_ARTICLES_DISABLED, $nbm_logname), 'warning');
     }
     unset($nbm_fixups, $next_check);
 }

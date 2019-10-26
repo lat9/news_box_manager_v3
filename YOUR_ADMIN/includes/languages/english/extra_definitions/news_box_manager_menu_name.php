@@ -39,6 +39,7 @@ define('NEWS_BOX_INSTALLED', '<em>News Box Manager</em> (%s) was successfully in
 define('NEWS_BOX_UPDATED', '<em>News Box Manager</em> was successfully updated from v%1$s to v%2$s.');
 
 // -----
-// Used by the plugin's update script when one or more articles are disabled due to missing content.
+// Used by the plugin's update script when one or more articles are disabled due to missing content.  The %s is filled in with the name
+// of the file that contains details about the articles that were disabled.
 //
-define('NEWS_BOX_ARTICLES_DISABLED', 'One or more of your existing news articles have been disabled, due to missing content.');
+define('NEWS_BOX_ARTICLES_DISABLED', 'One or more of your existing news articles have been disabled, due to missing content. See this (%s) file for details.');
