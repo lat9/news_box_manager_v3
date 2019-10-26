@@ -43,7 +43,7 @@ if ($news_box_script_name == FILENAME_NEWS_BOX_MANAGER . '.php') {
     }
     $all_news_types = false;
     require DIR_WS_LANGUAGES . $_SESSION['language'] . '/news_box_manager.php';
-    $news_box_name_type = 'NEWS_BOX_NAME_TYPE' . $news_box_type;
+    $news_box_name_type = 'BOX_NEWS_NAME_TYPE' . $news_box_type;
     $news_type_name = (defined($news_box_name_type)) ? constant($news_box_name_type) : ($news_box_name_type . TEXT_NEWS_TYPE_NAME_UNKNOWN);
 }
 
@@ -151,6 +151,7 @@ switch ($action) {
     // different 'Type'.
     //
     case 'moveconfirm':
+        $link_parms = "page=$nbm_page";
         if (isset($_POST['nID']) && isset($_POST['news_content_type'])) {
             $nID = (int)$_POST['nID'];
             $news_content_type = (int)$_POST['news_content_type'];
@@ -162,9 +163,10 @@ switch ($action) {
                       LIMIT 1"
                 );
                 $messageStack->add_session(SUCCESS_NEWS_ARTICLE_MOVED, 'success');
+                $link_parms = "nID=$nID" . $page_link;
             }
         }
-        zen_redirect(zen_href_link($news_box_script_name, "nID=$nID" . $page_link));
+        zen_redirect(zen_href_link($news_box_script_name, $link_parms));
         break;
         
     // -----
@@ -172,6 +174,7 @@ switch ($action) {
     // article in the article's current 'News Type'.
     //
     case 'copyconfirm':
+        $link_parms = "page=$nbm_page";
         if (isset($_POST['nID'])) {
             $nID = (int)$_POST['nID'];
             $article = $db->Execute(
@@ -209,9 +212,10 @@ switch ($action) {
                     zen_db_perform(TABLE_BOX_NEWS_CONTENT, $content);
                 }
                 $messageStack->add_session(SUCCESS_NEWS_ARTICLE_COPIED, 'success');
+                $link_parms = "nID=$nID" . $page_link;
             }
         }
-        zen_redirect(zen_href_link($news_box_script_name, "nID=$nID" . $page_link));
+        zen_redirect(zen_href_link($news_box_script_name, $link_parms));
         break;
         
     // -----
@@ -348,7 +352,7 @@ switch ($action) {
     case 'updatepreview':
     case 'newedit':
     case 'updateedit':
-        if (empty($_POST) || empty($_POST['nID'])) {
+        if (empty($_POST) || (($action == 'updatepreview' || $action == 'updateedit') && empty($_POST['nID']))) {
             zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
         }
         
@@ -364,14 +368,14 @@ switch ($action) {
             $error = false;
             if (!empty($_POST['news_start_date'])) {
                 $date_elements = explode('-', $_POST['news_start_date']);
-                if (count($date_elements) != 3 || !checkdate($date_elements[1], $date_elements[2], $date_elements[0])) {
+                if (count($date_elements) != 3 || !checkdate((int)$date_elements[1], (int)$date_elements[2], (int)$date_elements[0])) {
                     $error = true;
                     $messageStack->add(ERROR_NEWS_START_DATE, 'error');
                 }
             }
             if (!empty($_POST['news_end_date'])) {
                 $date_elements = explode('-', $_POST['news_end_date']);
-                if (count($date_elements) != 3 || !checkdate($date_elements[1], $date_elements[2], $date_elements[0])) {
+                if (count($date_elements) != 3 || !checkdate((int)$date_elements[1], (int)$date_elements[2], (int)$date_elements[0])) {
                     $error = true;
                     $messageStack->add(ERROR_NEWS_END_DATE, 'error');
                 }
@@ -532,7 +536,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $cancel_link = zen_href_link($news_box_script_name, "nID=$nID" . $page_link);
     } else {
         $form_action = 'newpreview';
-        $hidden_field = '';
+        $hidden_field = ($all_news_types) ? '' : zen_draw_hidden_field('news_content_type', $news_box_type);
         $cancel_link = zen_href_link($news_box_script_name, "page=$nbm_page");
     }
 ?>
@@ -678,7 +682,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $cancel_name = IMAGE_BACK;
     } else {
         $form_action = ($action == 'updatepreview') ? 'update' : 'insert';
-        $submit_buttons = zen_draw_form('news', FILENAME_NEWS_BOX_MANAGER, "action=$form_action$page_link");
+        $submit_buttons = zen_draw_form('news', $news_box_script_name, "action=$form_action$page_link");
         if ($action == 'updatepreview') {
             $edit_button_value = 'updateedit';
             $submit_buttons .= zen_draw_hidden_field('nID', $nID);
@@ -703,7 +707,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         <div class="col-sm-2"><?php echo ($nInfo->news_status == 0) ? TEXT_DISABLED : TEXT_ENABLED; ?></div>
 
         <div class="col-sm-1"><strong><?php echo TEXT_NEWS_START_DATE; ?></strong></div>
-        <div class="col-sm-2"><?php echo $nInfo->news_start_date; ?></div>
+        <div class="col-sm-2"><?php echo (empty($nInfo->news_start_date)) ? date('Y-m-d') : $nInfo->news_start_date; ?></div>
 
         <div class="col-sm-1"><strong><?php echo TEXT_NEWS_END_DATE; ?></strong></div>
         <div class="col-sm-2"><?php echo (empty($nInfo->news_end_date)) ? TEXT_NEVER : $nInfo->news_end_date; ?></div>
@@ -757,7 +761,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
    <div class="row text-center"><?php echo $submit_buttons; ?>&nbsp;<a href="<?php echo $cancel_link; ?>" class="btn btn-default" role="button"><?php echo $cancel_name; ?></a></div>
 <?php
 // -----
-// No special action or 'delete', 'copy' or 'move' (which display the right-sidebox for confirmation)?  Display the
+// No special action _OR_ 'delete', 'copy' or 'move' (which display the right-sidebox for confirmation)?  Display the
 // current listing of news articles.
 //
 } else {

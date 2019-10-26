@@ -77,4 +77,4 @@ define('SUCCESS_NEWS_ARTICLE_CHANGED', 'The news article has been successfully %
     define('NEWS_ARTICLE_CREATED', 'created');
 
 define('TEXT_DISPLAY_NUMBER_OF_NEWS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> news)');
-define('TEXT_NEWS_BOX_MANAGER_INFO', 'Use this tool to create news articles that are displayed in your store.  Refer to <em>Configuration-&gt;News Box Manager</em> for the various settings.<br /><br />A valid news article must have a non-blank &quot;News Title&quot; and &quot;News Content&quot; in <em>at least one</em> of your store\'s languages.  If your store has multiple languages and an article\'s title or content is not supplied for a language, the article will not be displayed for that language.');
+define('TEXT_NEWS_BOX_MANAGER_INFO', 'Use this tool to create news articles that are displayed in your store.  Refer to <em>Configuration-&gt;News Box Manager</em> for the various settings.<br /><br />A valid news article must have a non-blank &quot;News Title&quot; and &quot;News Content&quot; in <b>all</b> of your store\'s languages.');
