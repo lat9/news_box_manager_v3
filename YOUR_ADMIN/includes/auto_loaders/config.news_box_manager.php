@@ -7,3 +7,14 @@ $autoLoadConfig[200][] = array(
     'autoType' => 'init_script',
     'loadFile' => 'init_news_box_manager_admin.php'
 );
+                             
+$autoLoadConfig[200][] = array(
+    'autoType' => 'class',
+    'loadFile' => 'observers/NewsBoxManagerAdminObserver.php',
+    'classPath' => DIR_WS_CLASSES
+);
+$autoLoadConfig[200][] = array(
+    'autoType' => 'classInstantiate',
+    'className' => 'NewsBoxManagerAdminObserver',
+    'objectName' => 'nbm'
+);
