@@ -83,93 +83,54 @@ switch ($action) {
         $nID = (!empty($_POST['nID'])) ? (int)$_POST['nID'] : 0;
         
         // -----
-        // Validate the article's starting and ending dates.
+        // Add the starting/ending times to the news article's starting/ending dates.
         //
-        if (!empty($_POST['news_start_date'])) {
-            $date_elements = explode('-', $_POST['news_start_date']);
-            if (count($date_elements) != 3 || !checkdate($date_elements[1], $date_elements[2], $date_elements[0])) {
-                $error = true;
-                $messageStack->add(ERROR_NEWS_START_DATE, 'error');
-            }
-        }
-        if (!empty($_POST['news_end_date'])) {
-            $date_elements = explode('-', $_POST['news_end_date']);
-            if (count($date_elements) != 3 || !checkdate($date_elements[1], $date_elements[2], $date_elements[0])) {
-                $error = true;
-                $messageStack->add(ERROR_NEWS_END_DATE, 'error');
-            }
-        }
         $news_start_date = ((empty($_POST['news_start_date'])) ? date('Y-m-d') : zen_db_prepare_input($_POST['news_start_date'])) . ' 00:00:00';
         $news_end_date = (empty($_POST['news_end_date'])) ? 'null' : (zen_db_prepare_input($_POST['news_end_date']) . ' 23:59:59');
-        if (!$error && $news_end_date != 'null' && $news_start_date > $news_end_date) {
-            $error = true;
-            $messageStack->add(ERROR_NEWS_DATE_ISSUES, 'error');
-        }
         
-        // -----
-        // For the news article to be saved, it must have both a title and content in **all** languages defined for the store.
-        //
-        $news_title = $_POST['news_title'];
-        $news_content = $_POST['news_content'];
-        $content_error = false;
+        $sql_data_array = array (
+            'news_start_date' => $news_start_date,
+            'news_end_date' => $news_end_date,
+            'news_content_type' => $news_content_type,
+            'news_status' => (int)$_POST['news_status'],
+        );
+
+        if ($action == 'insert') {
+            $sql_data_array['news_added_date'] = 'now()';
+            zen_db_perform(TABLE_BOX_NEWS, $sql_data_array);
+            $nID = zen_db_insert_id();
+        } else {
+            $sql_data_array['news_modified_date'] = 'now()';
+            zen_db_perform(TABLE_BOX_NEWS, $sql_data_array, 'update', "box_news_id = $nID");
+        }
+
+        $news_metatags_title = $_POST['news_metatags_title'];
+        $news_metatags_keywords = $_POST['news_metatags_keywords'];
+        $news_metatags_description = $_POST['news_metatags_description'];
         foreach ($languages as $current_language) {
             $lang_id = $current_language['id'];
-            if (empty(trim($news_title[$lang_id])) || empty(trim($news_content[$lang_id]))) {
-                $error = true;
-                if (!$content_error) {
-                    $content_error = true;
-                    $messageStack->add(ERROR_NEWS_TITLE_CONTENT, 'error');
-                }
-            }
-        }
-        
-        // -----
-        // If no validation issues with the data, record the updates into the database.
-        //
-        if (!$error) {
+            $news_title = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $_POST['news_title'][$lang_id]);
+            $news_content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $_POST['news_content'][$lang_id]);
             $sql_data_array = array (
-                'news_start_date' => $news_start_date,
-                'news_end_date' => $news_end_date,
-                'news_content_type' => $news_content_type,
-                'news_status' => (int)$_POST['news_status'],
+                'news_title' => trim($news_title),
+                'news_content' => trim($news_content),
+                'news_metatags_title' => trim(zen_clean_html($news_metatags_title[$lang_id])),
+                'news_metatags_keywords' => (empty(trim(zen_clean_html($news_metatags_keywords[$lang_id])))) ? 'null' : trim(zen_clean_html($news_metatags_keywords[$lang_id])),
+                'news_metatags_description' => (empty(trim(zen_clean_html($news_metatags_description[$lang_id])))) ? 'null' : trim(zen_clean_html($news_metatags_description[$lang_id])),
             );
 
             if ($action == 'insert') {
-                $sql_data_array['news_added_date'] = 'now()';
-                zen_db_perform(TABLE_BOX_NEWS, $sql_data_array);
-                $nID = zen_db_insert_id();
+                $sql_data_array['box_news_id'] = $nID;
+                $sql_data_array['languages_id'] = $lang_id;
+                zen_db_perform(TABLE_BOX_NEWS_CONTENT, $sql_data_array);
+                $change_type = NEWS_ARTICLE_CREATED;
             } else {
-                $sql_data_array['news_modified_date'] = 'now()';
-                zen_db_perform(TABLE_BOX_NEWS, $sql_data_array, 'update', "box_news_id = $nID");
+                zen_db_perform(TABLE_BOX_NEWS_CONTENT, $sql_data_array, 'update', "box_news_id = $nID AND languages_id = $lang_id");
+                $change_type = NEWS_ARTICLE_UPDATED; 
             }
-
-            $news_metatags_title = $_POST['news_metatags_title'];
-            $news_metatags_keywords = $_POST['news_metatags_keywords'];
-            $news_metatags_description = $_POST['news_metatags_description'];
-            foreach ($languages as $current_language) {
-                $lang_id = $current_language['id'];
-                $sql_data_array = array (
-                    'news_title' => trim($news_title[$lang_id]),
-                    'news_content' => trim($news_content[$lang_id]),
-                    'news_metatags_title' => trim($news_metatags_title[$lang_id]),
-                    'news_metatags_keywords' => (empty(trim($news_metatags_keywords[$lang_id]))) ? 'null' : trim($news_metatags_keywords[$lang_id]),
-                    'news_metatags_description' => (empty(trim($news_metatags_description[$lang_id]))) ? 'null' : trim($news_metatags_description[$lang_id])
-                );
-
-                if ($action == 'insert') {
-                    $sql_data_array['box_news_id'] = $nID;
-                    $sql_data_array['languages_id'] = $lang_id;
-                    zen_db_perform(TABLE_BOX_NEWS_CONTENT, $sql_data_array);
-                    $change_type = NEWS_ARTICLE_CREATED;
-                } else {
-                    zen_db_perform(TABLE_BOX_NEWS_CONTENT, $sql_data_array, 'update', "box_news_id = $nID AND languages_id = $lang_id");
-                    $change_type = NEWS_ARTICLE_UPDATED; 
-                }
-            }
-            $messageStack->add_session(sprintf(SUCCESS_NEWS_ARTICLE_CHANGED, $change_type), 'success');
-            zen_redirect(zen_href_link($news_box_script_name, "nID=$nID$page_link"));
         }
-        $action = ($action == 'insert') ? 'newedit' : 'updateedit';
+        $messageStack->add_session(sprintf(SUCCESS_NEWS_ARTICLE_CHANGED, $change_type), 'success');
+        zen_redirect(zen_href_link($news_box_script_name, "nID=$nID$page_link"));
         break;
 
     // -----
@@ -183,6 +144,74 @@ switch ($action) {
             $messageStack->add_session(SUCCESS_NEWS_ARTICLE_DELETED, 'success');
         }
         zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+        break;
+        
+    // -----
+    // Move Confirmation: Issued from the 'Move' sidebox.  Moves the specified news article to a
+    // different 'Type'.
+    //
+    case 'moveconfirm':
+        if (isset($_POST['nID']) && isset($_POST['news_content_type'])) {
+            $nID = (int)$_POST['nID'];
+            $news_content_type = (int)$_POST['news_content_type'];
+            if ($news_content_type >= 1 && $news_content_type <= 4) {
+                $db->Execute(
+                    "UPDATE " . TABLE_BOX_NEWS . "
+                        SET news_content_type = $news_content_type
+                      WHERE box_news_id = $nID
+                      LIMIT 1"
+                );
+                $messageStack->add_session(SUCCESS_NEWS_ARTICLE_MOVED, 'success');
+            }
+        }
+        zen_redirect(zen_href_link($news_box_script_name, "nID=$nID" . $page_link));
+        break;
+        
+    // -----
+    // Copy Confirmation: Issued from the 'Copy' sidebox.  Makes a copy (currently disabled) of the
+    // article in the article's current 'News Type'.
+    //
+    case 'copyconfirm':
+        if (isset($_POST['nID'])) {
+            $nID = (int)$_POST['nID'];
+            $article = $db->Execute(
+                "SELECT *
+                   FROM " . TABLE_BOX_NEWS . "
+                  WHERE box_news_id = $nID
+                  LIMIT 1"
+            );
+            $article_content = $db->Execute(
+                "SELECT *
+                   FROM " . TABLE_BOX_NEWS_CONTENT . "
+                  WHERE box_news_id = $nID"
+            );
+            if (!$article->EOF && !$article_content->EOF) {
+                $article_base = $article->fields;
+                
+                unset($article_base['box_news_id'], $article_base['news_modified_date']);
+                
+                // -----
+                // If the news-end-date is empty, i.e. NULL, remove it from the to-be-recorded
+                // record to prevent unwanted '0000-00-00 00:00:00' dates from being stored.
+                //
+                if (empty($article_base['news_end_date'])) {
+                    unset($article_base['news_end_date']);
+                }
+                
+                $article_base['news_added_date'] = 'now()';
+                $article_base['news_status'] = 0;
+                
+                zen_db_perform(TABLE_BOX_NEWS, $article_base);
+                $new_nID = zen_db_insert_id();
+                
+                foreach ($article_content as $content) {
+                    $content['box_news_id'] = $new_nID;
+                    zen_db_perform(TABLE_BOX_NEWS_CONTENT, $content);
+                }
+                $messageStack->add_session(SUCCESS_NEWS_ARTICLE_COPIED, 'success');
+            }
+        }
+        zen_redirect(zen_href_link($news_box_script_name, "nID=$nID" . $page_link));
         break;
         
     // -----
@@ -246,9 +275,17 @@ switch ($action) {
     // -----
     // 1) Preview Only: Issued via click on the 'preview' icon on a news article's listing entry.
     // 2) Modify Article: Issued via click on the 'Edit' icon from an existing article's listing entry.
+    // 3) Copy an Article: Issued via click on the 'Copy' icon from an existing article's listing entry.
+    // 4) Move an Article: Issued via click on the 'Move' icon from an existing article's listing entry.
+    //    - Note that 'Move' is a little different; it's allowed only from the 'all articles' display tool.
     //
-    // In either case, we'll pull the requested article's information from the database for display or edit.
+    // In any case, we'll pull the requested article's information from the database for the follow-on display.
     //
+    case 'move':
+        if (!$all_news_types) {
+            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+        }
+    case 'copy':                    //-Fall-through from processing above ...
     case 'previewonly':
     case 'modify':
         if (empty($_GET['nID']) || ((int)$_GET['nID'] < 1)) {
@@ -313,6 +350,67 @@ switch ($action) {
     case 'updateedit':
         if (empty($_POST) || empty($_POST['nID'])) {
             zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+        }
+        
+        // -----
+        // On the transition from the new/edit action to its 'preview', make sure that
+        // the required fields are set and valid.  If not, kick the admin back to the
+        // editing page.
+        //
+        if ($action == 'newpreview' || $action == 'updatepreview') { 
+            // -----
+            // Validate the article's starting and ending dates.
+            //
+            $error = false;
+            if (!empty($_POST['news_start_date'])) {
+                $date_elements = explode('-', $_POST['news_start_date']);
+                if (count($date_elements) != 3 || !checkdate($date_elements[1], $date_elements[2], $date_elements[0])) {
+                    $error = true;
+                    $messageStack->add(ERROR_NEWS_START_DATE, 'error');
+                }
+            }
+            if (!empty($_POST['news_end_date'])) {
+                $date_elements = explode('-', $_POST['news_end_date']);
+                if (count($date_elements) != 3 || !checkdate($date_elements[1], $date_elements[2], $date_elements[0])) {
+                    $error = true;
+                    $messageStack->add(ERROR_NEWS_END_DATE, 'error');
+                }
+            }
+            $news_start = (empty($_POST['news_start_date'])) ? date('Y-m-d') : $_POST['news_start_date'];
+            $news_end = (empty($_POST['news_end_date'])) ? 'null' : $_POST['news_end_date'];
+            if (!$error && $news_end != 'null' && $news_start > $news_end) {
+                $error = true;
+                $messageStack->add(ERROR_NEWS_DATE_ISSUES, 'error');
+            }
+            
+            // -----
+            // For the news article to be saved, it must have both a title and content in **all** languages defined for the store
+            // and neither the title nor the content can contain any <script></script> tags.
+            //
+            $content_error = false;
+            foreach ($languages as $current_language) {
+                $lang_id = $current_language['id'];
+                if (preg_match('#<script.*?>.*?</script>#is', $_POST['news_title'][$lang_id])) {
+                    $content_error = true;
+                    break;
+                }
+                if (preg_match('#<script.*?>.*?</script>#is', $_POST['news_content'][$lang_id])) {
+                    $content_error = true;
+                    break;
+                }
+                if (empty(trim($_POST['news_title'][$lang_id])) || empty(trim($_POST['news_content'][$lang_id]))) {
+                    $content_error = true;
+                    break;
+                }
+            }
+            if ($content_error) {
+                $error = true;
+                $messageStack->add(ERROR_NEWS_TITLE_CONTENT, 'error');
+            }
+            
+            if ($error) {
+                $action = ($action == 'newpreview') ? 'newedit' : 'updateedit';
+            }
         }
         $nID = (int)$_POST['nID'];
         $nInfo = new objectInfo($_POST);
@@ -438,7 +536,6 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $cancel_link = zen_href_link($news_box_script_name, "page=$nbm_page");
     }
 ?>
-    <p><?php echo TEXT_EDIT_INSERT_INFO; ?></p>
     <?php echo zen_draw_form('news', $news_box_script_name, "action=$form_action" . $page_link, 'post', 'enctype="multipart/form-data" class="form-horizontal"') . $hidden_field; ?>
         <div>
             <span class="floatButton text-right">
@@ -483,7 +580,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                     </span>
                     <?php echo zen_draw_input_field('news_start_date', $nInfo->news_start_date, 'class="form-control"'); ?>
                 </div>
-                <span class="help-block errorText">(YYYY-MM-DD)</span>
+                <span class="help-block"><?php echo TEXT_NEWS_START_DATE_HELP; ?></span>
             </div>
         </div>
         
@@ -496,7 +593,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                     </span>
                     <?php echo zen_draw_input_field('news_end_date', $nInfo->news_end_date, 'class="form-control"'); ?>
                 </div>
-                <span class="help-block errorText">(YYYY-MM-DD)</span>
+                <span class="help-block"><?php echo TEXT_NEWS_END_DATE_HELP; ?></span>
             </div>
         </div>
 <?php 
@@ -517,6 +614,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                     <span class="input-group-addon"><?php echo $lang_image; ?></span>
                     <div class="form-control"><strong><?php echo sprintf(TEXT_NEWS_FOR_LANGUAGE, $current_language['name']); ?></strong></div>
                 </div>
+                <span class="help-block"><?php echo TEXT_NEWS_CONTENT_HELP; ?></span>
             </div>
         </div>
 
@@ -772,7 +870,8 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                     </a>
 <?php
         // -----
-        // Don't offer to 'Move' an article if we're not displaying **all** news articles.
+        // Don't offer to 'Move' an article if we're not displaying **all** news articles.  The admin might not
+        // have permission to view/modify other article types.
         //
         if ($all_news_types) {
 ?>
@@ -798,6 +897,14 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $heading = array();
         $contents = array();
         $cancel_link = '<a href="' . zen_href_link($news_box_script_name, 'nID=' . $nInfo->box_news_id . $page_link) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>';
+
+        $type_selections = array(
+            array('id' => 1, 'text' => BOX_NEWS_NAME_TYPE1),
+            array('id' => 2, 'text' => BOX_NEWS_NAME_TYPE2),
+            array('id' => 3, 'text' => BOX_NEWS_NAME_TYPE3),
+            array('id' => 4, 'text' => BOX_NEWS_NAME_TYPE4)
+        );
+
         switch ($action) {
             case 'delete':
                 // -----
@@ -813,10 +920,32 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                 $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
                 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> ' . $cancel_link);
                 break;
+                
+            case 'copy':
+                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_COPY_NEWS . '</h4>');
+                
+                $contents = array('form' => zen_draw_form('news', $news_box_script_name, 'action=copyconfirm' . $page_link) . zen_draw_hidden_field('nID', $nInfo->box_news_id));
+ 
+                $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
+                $contents[] = array('text' => TEXT_INFO_COPY_ARTICLE);
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_COPY . '</button> ' . $cancel_link);
+                break;
+                
+            case 'move':
+                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_MOVE_NEWS . '</h4>');
+                
+                $contents = array('form' => zen_draw_form('news', $news_box_script_name, 'action=moveconfirm' . $page_link) . zen_draw_hidden_field('nID', $nInfo->box_news_id));
+ 
+                $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
+                $contents[] = array('text' => TEXT_INFO_MOVE_CHOOSE_TYPE);
+                $contents[] = array('text' => zen_draw_pull_down_menu('news_content_type', $type_selections, $nInfo->news_content_type, 'class="form-control"'));
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_MOVE . '</button> ' . $cancel_link);
+                break;
 
             default:
                 break;
         }
+        
         if (!empty($heading) && !empty($contents)) {
             $box = new box;
 ?>
