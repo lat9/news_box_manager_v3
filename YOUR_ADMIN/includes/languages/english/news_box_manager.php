@@ -30,6 +30,12 @@ define('TEXT_NEWS_METATAGS_DESCRIPTION', 'Metatags Description:');
 define('TEXT_NEWS_METATAGS_KEYWORDS', 'Metatags Keywords:');
     define('TEXT_NEWS_CONTENT_HELP', 'The <b>News Title</b> and <b>News Content</b> must be non-blank in all languages and cannot contain <code>&lt;script&gt;&lt;/script&gt;</code> tags.  HTML tags are not supported in any of the <b>Metatags</b> fields.');
     
+define('TEXT_NEWS_SORT_ORDER', 'News Display Order:');
+    define('NEWS_SORT_START_DESC', 'Start Date (desc)');    //-Default
+    define('NEWS_SORT_START_ASC', 'Start Date (asc)');
+    define('NEWS_SORT_ENABLED', 'Enabled Articles First');
+    define('NEWS_SORT_DISABLED', 'Disabled Articles First');
+
 define('NEWS_BOX_NAME_ALL', 'All');
 
 define('TEXT_NEWS_CHOOSE_TYPE', 'Choose the article\'s &quot;Type&quot;:');
@@ -76,5 +82,5 @@ define('SUCCESS_NEWS_ARTICLE_CHANGED', 'The news article has been successfully %
     define('NEWS_ARTICLE_UPDATED', 'updated');
     define('NEWS_ARTICLE_CREATED', 'created');
 
-define('TEXT_DISPLAY_NUMBER_OF_NEWS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> news)');
+define('TEXT_DISPLAY_NUMBER_OF_NEWS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> news articles)');
 define('TEXT_NEWS_BOX_MANAGER_INFO', 'Use this tool to create news articles that are displayed in your store.  Refer to <em>Configuration-&gt;News Box Manager</em> for the various settings.<br /><br />A valid news article must have a non-blank &quot;News Title&quot; and &quot;News Content&quot; in <b>all</b> of your store\'s languages.');

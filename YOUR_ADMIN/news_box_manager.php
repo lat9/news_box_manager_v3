@@ -53,11 +53,21 @@ if ($news_box_script_name == FILENAME_NEWS_BOX_MANAGER . '.php') {
 $languages = zen_get_languages();
 
 // -----
-// Gather up some common-use values.
+// Handle (and sanitize) the common $_GET variables.
 //
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-$nbm_page = (!empty($_GET['page'])) ? (int)$_GET['page'] : 1;
-$page_link = "&amp;page=$nbm_page";
+$nbm_page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+if ($nbm_page < 1) {
+    $nbm_page = 1;
+    unset($_GET['page']);
+}
+$current_sort = (isset($_GET['s'])) ? (int)$_GET['s'] : false;
+if ($current_sort !== false && ($current_sort < 0 || $current_sort > 3)) {
+    $current_sort = false;
+    unset($_GET['s']);
+}
+$keywords = (isset($_GET['search'])) ? (string)$_GET['search'] : false;
+$page_get_params = zen_get_all_get_params(array('action', 'nID'));
 
 // -----
 // If the admin clicked the "Back" button from the news insert/update preview, 'reset'
@@ -130,7 +140,7 @@ switch ($action) {
             }
         }
         $messageStack->add_session(sprintf(SUCCESS_NEWS_ARTICLE_CHANGED, $change_type), 'success');
-        zen_redirect(zen_href_link($news_box_script_name, "nID=$nID$page_link"));
+        zen_redirect(zen_href_link($news_box_script_name, $page_get_params . "nID=$nID"));
         break;
 
     // -----
@@ -143,7 +153,7 @@ switch ($action) {
             $db->Execute("DELETE FROM " . TABLE_BOX_NEWS_CONTENT . " WHERE box_news_id = $nID");
             $messageStack->add_session(SUCCESS_NEWS_ARTICLE_DELETED, 'success');
         }
-        zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+        zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         break;
         
     // -----
@@ -151,7 +161,7 @@ switch ($action) {
     // different 'Type'.
     //
     case 'moveconfirm':
-        $link_parms = "page=$nbm_page";
+        $link_parms = $page_get_params;
         if (isset($_POST['nID']) && isset($_POST['news_content_type'])) {
             $nID = (int)$_POST['nID'];
             $news_content_type = (int)$_POST['news_content_type'];
@@ -163,7 +173,7 @@ switch ($action) {
                       LIMIT 1"
                 );
                 $messageStack->add_session(SUCCESS_NEWS_ARTICLE_MOVED, 'success');
-                $link_parms = "nID=$nID" . $page_link;
+                $link_parms .= "nID=$nID";
             }
         }
         zen_redirect(zen_href_link($news_box_script_name, $link_parms));
@@ -174,7 +184,7 @@ switch ($action) {
     // article in the article's current 'News Type'.
     //
     case 'copyconfirm':
-        $link_parms = "page=$nbm_page";
+        $link_parms = $page_get_params;
         if (isset($_POST['nID'])) {
             $nID = (int)$_POST['nID'];
             $article = $db->Execute(
@@ -212,7 +222,7 @@ switch ($action) {
                     zen_db_perform(TABLE_BOX_NEWS_CONTENT, $content);
                 }
                 $messageStack->add_session(SUCCESS_NEWS_ARTICLE_COPIED, 'success');
-                $link_parms = "nID=$nID" . $page_link;
+                $link_parms .= "nID=$nID";
             }
         }
         zen_redirect(zen_href_link($news_box_script_name, $link_parms));
@@ -232,9 +242,9 @@ switch ($action) {
               WHERE box_news_id = $nID 
               LIMIT 1"
         );
-        $redirect_parms = "page=$nbm_page";
+        $redirect_parms = $page_get_params;
         if (!$news->EOF) {
-            $redirect_parms = "nID=$nID" . $page_link;
+            $redirect_parms .= "nID=$nID";
             $news_content = $db->Execute(
                 "SELECT news_title, news_content
                    FROM " . TABLE_BOX_NEWS_CONTENT . "
@@ -268,11 +278,10 @@ switch ($action) {
     // we just need to redirect to get the page to refresh properly.
     //
     case 'set_editor':
-        $params = '';
-        if (!empty($_GET['nID'])) {
-            $params = 'nID=' . (int)$_GET['nID'] . '&amp;';
+        $params = $page_get_params;
+        if (isset($_GET['nID']) && ((int)$_GET['nID']) > 0) {
+            $params .= 'nID=' . (int)$_GET['nID'];
         }
-        $params .= $separator . "page=$nbm_page";
         zen_redirect(zen_href_link($news_box_script_name, $params));
         break;
         
@@ -287,13 +296,13 @@ switch ($action) {
     //
     case 'move':
         if (!$all_news_types) {
-            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+            zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
     case 'copy':                    //-Fall-through from processing above ...
     case 'previewonly':
     case 'modify':
         if (empty($_GET['nID']) || ((int)$_GET['nID'] < 1)) {
-            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+            zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
         
         $nID = (int)$_GET['nID'];
@@ -304,7 +313,7 @@ switch ($action) {
              LIMIT 1"
         );
         if ($news_info->EOF) {
-            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+            zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
         $nInfo = new objectInfo($news_info->fields);
         
@@ -324,7 +333,7 @@ switch ($action) {
               WHERE box_news_id = $nID"
         );
         if ($news_content_info->EOF) {
-            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+            zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
         $nInfo->news_title = array();
         $nInfo->news_content = array();
@@ -353,7 +362,7 @@ switch ($action) {
     case 'newedit':
     case 'updateedit':
         if (empty($_POST) || (($action == 'updatepreview' || $action == 'updateedit') && empty($_POST['nID']))) {
-            zen_redirect(zen_href_link($news_box_script_name, "page=$nbm_page"));
+            zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
         
         // -----
@@ -533,14 +542,17 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
     if ($action == 'modify' || $action == 'updateedit') {
         $form_action = 'updatepreview' . "&amp;nID=$nID";
         $hidden_field = zen_draw_hidden_field('nID', $nID);
-        $cancel_link = zen_href_link($news_box_script_name, "nID=$nID" . $page_link);
+        $cancel_link = zen_href_link($news_box_script_name, $page_get_params . "nID=$nID");
     } else {
         $form_action = 'newpreview';
         $hidden_field = ($all_news_types) ? '' : zen_draw_hidden_field('news_content_type', $news_box_type);
-        $cancel_link = zen_href_link($news_box_script_name, "page=$nbm_page");
+        $cancel_link = zen_href_link($news_box_script_name, $page_get_params);
+    }
+    if (!empty($page_get_params)) {
+        $page_get_params = '&amp;' . $page_get_params;
     }
 ?>
-    <?php echo zen_draw_form('news', $news_box_script_name, "action=$form_action" . $page_link, 'post', 'enctype="multipart/form-data" class="form-horizontal"') . $hidden_field; ?>
+    <?php echo zen_draw_form('news', $news_box_script_name, "action=$form_action" . $page_get_params, 'post', 'enctype="multipart/form-data" class="form-horizontal"') . $hidden_field; ?>
         <div>
             <span class="floatButton text-right">
                 <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button>&nbsp;&nbsp;<a href="<?php echo $cancel_link; ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
@@ -675,14 +687,17 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
 // Previewing an article (from the listing) or prior to saving changes via edit/insert ...
 //
 } elseif ($action == 'previewonly' || $action == 'newpreview' || $action == 'updatepreview') {
-    $cancel_parms = ($nID > 0) ? ("nID=$nID" . $page_link) : "page=$nbm_page";
+    $cancel_parms = $page_get_params;
+    if ($nID > 0) {
+        $cancel_parms .= "nID=$nID";
+    }
     $cancel_link = zen_href_link($news_box_script_name, $cancel_parms);
     if ($action == 'previewonly') {
         $submit_buttons = '';
         $cancel_name = IMAGE_BACK;
     } else {
         $form_action = ($action == 'updatepreview') ? 'update' : 'insert';
-        $submit_buttons = zen_draw_form('news', $news_box_script_name, "action=$form_action$page_link");
+        $submit_buttons = zen_draw_form('news', $news_box_script_name, "action=$form_action" . ((empty($page_get_params)) ? '' : "&amp;$page_get_params"));
         if ($action == 'updatepreview') {
             $edit_button_value = 'updateedit';
             $submit_buttons .= zen_draw_hidden_field('nID', $nID);
@@ -775,21 +790,107 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
     );
 ?>
     <p><?php echo TEXT_NEWS_BOX_MANAGER_INFO; ?></p>
-    <div class="col-sm-12">
+<?php
+// -----
+// Don't render sort/search/editor forms when a sidebox action is active.
+//
+    if ($action == '') {
+        // -----
+        // Choose sort order form.
+        //
+?>
+    <div class="col-md-4">
          <div>
 <?php
-    // toggle switch for editor
-    echo zen_draw_form('set_editor_form', $news_box_script_name, '', 'get', 'class="form-horizontal"');
-    echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="col-sm-6 col-md-4 control-label"');
-    echo '<div class="col-sm-6 col-md-8">' . zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onchange="this.form.submit();" class="form-control"') . '</div>';
-    echo zen_hide_session_id();
-    echo ($nID != 0) ? zen_draw_hidden_field('nID', $nID) : '';
-    echo zen_draw_hidden_field('page', $nbm_page);
-    echo zen_draw_hidden_field('action', 'set_editor');
-    echo '</form>';
+        $sort_choices = array(
+            array('id' => '0', 'text' => NEWS_SORT_START_DESC),
+            array('id' => '1', 'text' => NEWS_SORT_START_ASC),
+            array('id' => '2', 'text' => NEWS_SORT_ENABLED),
+            array('id' => '3', 'text' => NEWS_SORT_DISABLED),
+        );
+        // toggle switch for editor
+        echo zen_draw_form('sort_news_form', $news_box_script_name, '', 'get', 'class="form-horizontal"');
+        echo zen_draw_label(TEXT_NEWS_SORT_ORDER, 's', 'class="col-sm-6 col-md-4 control-label"');
+        echo '<div class="col-sm-6 col-md-8">' . zen_draw_pull_down_menu('s', $sort_choices, (int)$current_sort, 'onchange="this.form.submit();" class="form-control"') . '</div>';
+        echo zen_hide_session_id();
+        if ($nID > 0) {
+            echo zen_draw_hidden_field('nID', $nID);
+        }
+        if ($keywords !== false) {
+            echo zen_draw_hidden_field('search', $keywords);
+        }
+        echo zen_draw_hidden_field('page', $nbm_page);
+        echo '</form>';
 ?>
           </div>
     </div>
+<?php
+        // -----
+        // Search news form.
+        //
+?>
+    <div class="col-md-4">
+        <div>
+<?php
+        echo zen_draw_form('search_news_form', $news_box_script_name, '', 'get', 'class="form-horizontal"');
+?>
+            <div class="col-sm-6 col-md-4 control-label"><?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search'); ?></div>
+            <div class="col-sm-6 col-md-8"><?php echo zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '') . ' class="form-control"'); ?></div>
+            <div class="col"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '1'); ?></div>
+<?php
+            echo zen_hide_session_id();
+            if (!empty($keywords)) {
+?>
+            <div class="col-sm-6 col-md-4 control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></div>
+            <div class="col-sm-6 col-md-8">
+<?php 
+                echo zen_output_string_protected($keywords);
+?>
+                <a href="<?php echo zen_href_link($news_box_script_name, zen_get_all_get_params(array('action', 'search'))); ?>" class="btn btn-default" role="button"><?php echo IMAGE_RESET; ?></a>
+            </div>
+<?php
+            }
+            if ($current_sort !== false) {
+                echo zen_draw_hidden_field('s', $current_sort);
+            }
+            echo '</form>';
+?>
+        </div>
+    </div>
+<?php
+        // -----
+        // Choose editor form.
+        //
+?>
+    <div class="col-md-4">
+         <div>
+<?php
+        // toggle switch for editor
+        echo zen_draw_form('set_editor_form', $news_box_script_name, '', 'get', 'class="form-horizontal"');
+        echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="col-sm-6 col-md-4 control-label"');
+        echo '<div class="col-sm-6 col-md-8">' . zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onchange="this.form.submit();" class="form-control"') . '</div>';
+        echo zen_hide_session_id();
+        if ($nID > 0) {
+            echo zen_draw_hidden_field('nID', $nID);
+        }
+        echo zen_draw_hidden_field('page', $nbm_page);
+        if ($current_sort !== false) {
+            echo zen_draw_hidden_field('s', $current_sort);
+        }
+        if ($keywords !== false) {
+            echo zen_draw_hidden_field('search', $keywords);
+        }
+        echo zen_draw_hidden_field('action', 'set_editor');
+        echo '</form>';
+?>
+          </div>
+    </div>
+<?php
+    }
+
+// -----
+// Start table output ...
+?>
     <div <?php echo (empty($action)) ? '' : 'class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft"'; ?>>
         <table class="table table-striped table-hover">
             <thead>
@@ -811,7 +912,42 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                 </tr>
             </thead>
 <?php
+    switch ((int)$current_sort) {
+        // -----
+        // Order by article start-date, oldest first.
+        //
+        case 1:
+            $order_by = 'n.news_start_date ASC, n.box_news_id ASC';
+            break;
+        // ------
+        // Enabled articles first, then by article ID.
+        //
+        case 2:
+            $order_by = 'n.news_status DESC, n.box_news_id ASC';
+            break;
+        // -----
+        // Disabled articles first, then by article ID.
+        //
+        case 3:
+            $order_by = 'n.news_status ASC, n.box_news_id ASC';
+            break;
+        // -----
+        // Order by article start-date, newest first.
+        //
+        default:
+            $order_by = 'n.news_start_date DESC, n.box_news_id ASC';
+            break;
+    }
     $where_clause = ($all_news_types) ? '' : " WHERE news_content_type = $news_box_type";
+    if (!empty($keywords)) {
+        if (empty($where_clause)) {
+            $where_clause = ' WHERE ';
+        } else {
+            $where_clause .= ' AND ';
+        }
+        $search_clause = '%' . zen_db_input($keywords) . '%';
+        $where_clause .= "(nc.news_title LIKE '$search_clause' OR nc.news_content LIKE '$search_clause')";
+    }
     $news_query_raw = 
         "SELECT n.box_news_id, nc.news_title, nc.news_content, n.news_added_date, n.news_modified_date, n.news_start_date, n.news_end_date, n.news_status, n.news_content_type 
            FROM " . TABLE_BOX_NEWS . " n
@@ -819,7 +955,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                     ON nc.box_news_id = n.box_news_id
                    AND nc.languages_id = " . (int)$_SESSION['languages_id'] . "
            $where_clause
-          ORDER BY n.news_start_date DESC, n.box_news_id";
+          ORDER BY $order_by";
     $news_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $news_query_raw, $news_query_numrows);
     $news = $db->Execute($news_query_raw);
     while (!$news->EOF) {
@@ -829,7 +965,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $end_date_class = ($news->fields['news_end_date'] == null || $news->fields['news_end_date'] >= date('Y-m-d')) ? 'green' : 'red';
         $news_end_date = ($news->fields['news_end_date'] == null) ? TEXT_NONE : zen_date_short($news->fields['news_end_date']);
         
-        $link_parms = 'nID=' . $news->fields['box_news_id'] . $page_link;
+        $link_parms = $page_get_params . 'nID=' . $news->fields['box_news_id'];
         
         $row_class = '';
         if ($nID == $news->fields['box_news_id']) {
@@ -900,7 +1036,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
     if (isset($nInfo)) {
         $heading = array();
         $contents = array();
-        $cancel_link = '<a href="' . zen_href_link($news_box_script_name, 'nID=' . $nInfo->box_news_id . $page_link) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>';
+        $cancel_link = '<a href="' . zen_href_link($news_box_script_name, $page_get_params . 'nID=' . $nInfo->box_news_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>';
 
         $type_selections = array(
             array('id' => 1, 'text' => BOX_NEWS_NAME_TYPE1),
@@ -919,7 +1055,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                 }
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_NEWS . '</h4>');
                 
-                $contents = array('form' => zen_draw_form('news', $news_box_script_name, 'action=deleteconfirm' . $page_link) . zen_draw_hidden_field('nID', $nInfo->box_news_id));
+                $contents = array('form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=deleteconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id));
                 $contents[] = array('text' => TEXT_NEWS_DELETE_INFO);
                 $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
                 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> ' . $cancel_link);
@@ -928,7 +1064,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             case 'copy':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_COPY_NEWS . '</h4>');
                 
-                $contents = array('form' => zen_draw_form('news', $news_box_script_name, 'action=copyconfirm' . $page_link) . zen_draw_hidden_field('nID', $nInfo->box_news_id));
+                $contents = array('form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=copyconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id));
  
                 $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
                 $contents[] = array('text' => TEXT_INFO_COPY_ARTICLE);
@@ -938,7 +1074,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             case 'move':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_MOVE_NEWS . '</h4>');
                 
-                $contents = array('form' => zen_draw_form('news', $news_box_script_name, 'action=moveconfirm' . $page_link) . zen_draw_hidden_field('nID', $nInfo->box_news_id));
+                $contents = array('form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=moveconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id));
  
                 $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
                 $contents[] = array('text' => TEXT_INFO_MOVE_CHOOSE_TYPE);
@@ -963,14 +1099,14 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $news_display_links = '';
     } else {
         $news_display_count = $news_split->display_count($news_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $nbm_page, TEXT_DISPLAY_NUMBER_OF_NEWS);
-        $news_display_links = $news_split->display_links($news_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $nbm_page);
+        $news_display_links = $news_split->display_links($news_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $nbm_page, zen_get_all_get_params(array('action', 'page', 'nID')));
     }
 ?>
     <div class="row text-center">
         <div class="col-sm-4"><?php echo $news_display_count; ?></div>
         <div class="col-sm-4"><?php echo $news_display_links; ?></div>
         <div class="col-sm-4">
-            <a href="<?php echo zen_href_link($news_box_script_name, 'action=new' . $page_link ); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
+            <a href="<?php echo zen_href_link($news_box_script_name, $page_get_params . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
         </div>
     </div>
 <?php
