@@ -20,7 +20,7 @@ if (is_array($start_date)) {
 if (is_array($start_date)) {
     $news_date = '<span>' . $start_date[0] . '</span><span class="nb-day">' . $start_date[1] . '</span><span>' . $start_date[2] . '</span>';
 } else {
-    $news_date = '<div class="news-header"><span>' . TEXT_NEWS_PUBLISHED_DATE . '</span><span>' . $start_date . ((!empty($end_date)) ? ( NEWS_DATE_SEPARATOR . $end_date) : '') . '</span></div>';
+    $news_date = '<div class="news-header"><strong>' . TEXT_NEWS_PUBLISHED_DATE . '</strong>&nbsp;<span>' . $start_date . ((!empty($end_date)) ? (NEWS_DATE_SEPARATOR . $end_date) : '') . '</span></div>';
 }
 ?>
     <div class="news-dates"><?php echo $news_date; ?></div>
