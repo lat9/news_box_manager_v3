@@ -738,6 +738,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             $submit_buttons .= zen_draw_hidden_field("news_metatags_keywords[$lang_id]", $nInfo->news_metatags_keywords[$lang_id]);
             $submit_buttons .= zen_draw_hidden_field("news_metatags_description[$lang_id]", $nInfo->news_metatags_description[$lang_id]);
         }
+        $news_content = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $nInfo->news_content[$lang_id]) ? nl2br($nInfo->news_content[$lang_id]) : $nInfo->news_content[$lang_id]);
 ?>
     <div class="row">
         <div class="col-sm-6 pageHeading">
@@ -745,7 +746,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         </div>
     </div>
     <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-    <div class="row"><?php echo $nInfo->news_content[$lang_id]; ?></div>
+    <div class="row"><?php echo $news_content; ?></div>
     <hr />
 
     <a href="#metatags-<?php echo $lang_id; ?>" class="btn btn-info" data-toggle="collapse"><?php echo TEXT_METATAGS_SHOW_HIDE; ?></a>

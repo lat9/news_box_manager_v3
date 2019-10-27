@@ -40,7 +40,7 @@ if ($news_box_query->EOF) {
 }
 
 $news_title = $news_box_query->fields['news_title'];
-$news_content = $news_box_query->fields['news_content'];
+$news_content = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $news_box_query->fields['news_content'])) ? nl2br($news_box_query->fields['news_content']) : $news_box_query->fields['news_content'];
 $news_type = $news_box_query->fields['news_content_type'];
 
 $end_date = (!empty($news_box_query->fields['news_end_date']) && $news_box_query->fields['news_end_date'] != '0001-01-01 00:00:00') ? $news_box_query->fields['news_end_date'] : '';
@@ -55,7 +55,7 @@ if (NEWS_BOX_DATE_FORMAT == 'short' || (NEWS_BOX_DATE_FORMAT == 'MdY' && !empty(
 }
 
 if (!empty($end_date)) {
-    $end_date = (NEWS_BOX_DATE_FORMAT == 'short') ? zen_date_short($news_box_query->fields['news_end_date']) : zen_date_long($news_box_query->fields['news_end_date']);
+    $end_date = (NEWS_BOX_DATE_FORMAT == 'long') ? zen_date_long($news_box_query->fields['news_end_date']) : zen_date_short($news_box_query->fields['news_end_date']);
 }
 
 $canonicalLink = zen_href_link(FILENAME_ARTICLE, "p=$news_id");
