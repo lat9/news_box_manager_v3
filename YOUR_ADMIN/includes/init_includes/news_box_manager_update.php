@@ -266,26 +266,36 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
     // been disabled.
     //
     $nbm_fixups = $db->Execute(
-        "SELECT *
-           FROM " . TABLE_BOX_NEWS_CONTENT
+        "SELECT nbc.*
+           FROM " . TABLE_BOX_NEWS . " nb
+                INNER JOIN " . TABLE_BOX_NEWS_CONTENT . " nbc
+                    ON nbc.box_news_id = nb.box_news_id
+          WHERE nb.news_status = 1
+          ORDER BY nbc.box_news_id ASC"
     );
     $news_disabled = array();
     $nbm_logname = DIR_FS_LOGS . '/news_box_manager_articles_disabled.log';
     foreach ($nbm_fixups as $next_check) {
         if (empty(trim($next_check['news_title'])) || empty(trim($next_check['news_content']))) {
-            if (!in_array($next_check['news_box_id'], $news_disabled)) {
-                $news_disabled[] = $next_check['news_box_id'];
-                error_log('News article #' . $next_check['news_box_id'] . ' has been disabled, due to missing content.' . PHP_EOL, 3, $nbm_logname);
+            if (!in_array($next_check['box_news_id'], $news_disabled)) {
+                $news_disabled[] = $next_check['box_news_id'];
+                $db->Execute(
+                    "UPDATE " . TABLE_BOX_NEWS . "
+                        SET news_status = 0
+                      WHERE box_news_id = {$next_check['box_news_id']}
+                      LIMIT 1"
+                );
+                error_log(date('Y-m-d H:i:s: ') . 'News article #' . $next_check['box_news_id'] . ' has been disabled, due to missing content.' . PHP_EOL, 3, $nbm_logname);
             }
         }
     }
-    if (!empty($news_disabled)) {
-        $messageStack->add(sprintf(NEWS_BOX_ARTICLES_DISABLED, $nbm_logname), 'warning');
+    if (count($news_disabled) != 0) {
+        $messageStack->add_session(sprintf(NEWS_BOX_ARTICLES_DISABLED, $nbm_logname), 'warning');
     }
     unset($nbm_fixups, $next_check);
 }
 
-$messageStack->add($nb_message, 'success');
+$messageStack->add_session($nb_message, 'success');
 zen_record_admin_activity($nb_message, 'warning');
 $db->Execute(
     "UPDATE " . TABLE_CONFIGURATION . " 
