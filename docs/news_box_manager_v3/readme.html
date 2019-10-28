@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <title>News Box Manager for Zen Cart&reg; v1.5.6 and later</title>
-
+<link rel="icon" href="../vinos_favicon.ico" type="image/x-icon" />
 <style type="text/css">
 <!--
 a, a:active, a:visited { color: #006666; text-decoration: none; }
@@ -28,19 +28,21 @@ img { margin-left: 20px; max-width: 95%; }
 <body>
 <h1>News Box Manager &mdash; for Zen Cart v1.5.6 and Later</h1>
 <h3>Version 3.0.0</h3>
-<p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?216422" target="_blank">News Box Manager v2.0.0 [Support Thread]</a></p>
-<p>GitHub repository: <a href="https://github.com/lat9/news_box_manager" target="_blank">https://github.com/lat9/news_box_manager</a></p>
-<p>This plugin represents a restructuring of the <a href="https://www.zen-cart.com/downloads.php?do=file&id=147" target="_blank">News Box Manager, v1-5</a> for Zen Cart v1.3.x, enabling the plugin to support current Zen Cart and PHP versions.</p>
+<p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?216422" target="_blank">News Box Manager v3.0.0 [Support Thread]</a></p>
+<p>GitHub repository: <a href="https://github.com/lat9/news_box_manager_v3" target="_blank">https://github.com/lat9/news_box_manager_v3</a></p>
+<p>This plugin represents a restructuring of the <a href="https://www.zen-cart.com/downloads.php?do=file&id=1968" target="_blank">News Box Manager -- v2.x.x</a> for Zen Cart v1.5.x, enabling the plugin to support current Zen Cart and PHP versions.</p>
+<p>For additional information, please refer to the plugin's <a href="https://github.com/lat9/news_box_manager_v3/blob/master/readme.md" target="_blank">online documentation</a>.</p>
 
 <h2>Purpose</h2>
-<p>This plugin adds a <em>Latest News</em> side-box and home-page center-box with an admin-level news editor to your Zen Cart. You create news articles using the tools provided, e.g. <em>Tools-&gt;News Box Manager [All Types],</em>, which are displayed in the side- and center-boxes (based on your chosen configuration).</p>
-<p>The news articles you write have a <em>Start Date</em> and <em>End Date</em> (which can be set to &quot;--none--&quot;), which determine whether or not the article is displayed to your customers.  Articles are displayed if the article's status is <em>Enabled</em>, the <em>Start Date</em> is on or after the current date and the <em>End Date</em> is either &quot;--none--&quot; or on or before the current date.  That way, you can write an article today that isn't displayed to your customers until sometime next week.</p>
-<p>Starting with v2.2.0, you can define article-specific <em>metatags</em> using the plugin's admin tool.  Your customizations appear in an article's storefront rendering on the <code>article</code> page.</p>
+<p>This plugin enables you to write news-related content for your Zen Cart store, displaying the most recent articles in sideboxes for your customers to view.</p>
+<p>The plugin adds two side-boxes and an <em>optional</em> home-page center-box with an admin-level news editor to your Zen Cart. You create news articles using the tools provided, e.g. <em>Tools-&gt;News Box Manager [All Types],</em>, which are displayed in the side- and center-boxes (based on your chosen configuration).</p>
+<p>News articles you write have a <em>Start Date</em> and <em>End Date</em> (which can be set to &quot;--none--&quot;), which determine whether or not the article is displayed to your customers.  Articles are displayed if the article's status is <em>Enabled</em>, the <em>Start Date</em> is on or after the current date and the <em>End Date</em> is either &quot;--none--&quot; or on or before the current date.  That way, you can write an article today that isn't displayed to your customers until sometime next week.</p>
+<p>You can define article-specific <em>metatags</em> using the plugin's admin tool.  Your customizations appear in an article's storefront rendering on the <code>article</code> page.</p>
 
 <h3>Admin Interfaces</h3>
 <p>Once you have copied the admin-level files to your cart's file system, you will see two new menu items:</p>
 <ol>
-  <li><em>Configuration-&gt;News Box Manager</em>, where you control the plugin's settings.</li>
+  <li><em>Configuration-&gt;News Box Manager [All Types]</em>, where you control the plugin's settings.</li>
   <li><em>Tools-&gt;News Box Manager</em>, where you write and manage your store's news articles.  If you have an HTML editor installed in your admin, you can use that editor to edit/create your news articles.  If you have multiple languages in your store, you can write language-specific content, too.<br /><br /><b>Note:</b> For previous versions, this tool was located under the &quot;Localization&quot; menu.</li>
 </ol>
 
@@ -102,8 +104,8 @@ img { margin-left: 20px; max-width: 95%; }
 
 <h2>Version History</h2>
 <ul>
-  <li>v3.0.0, 2019-09-30:<ul>
-    <li>CHANGE: <b>Totally</b> restructured for continued operation under Zen Carts v1.5.6 and later.</li>
+  <li>v3.0.0, 2019-10-28:<ul>
+    <li>CHANGE: <b>Totally</b> restructured for continued operation for Zen Carts v1.5.6 and later.</li>
     <li>The following files were changed/<span class="added">added</span>/<span class="removed">removed</span>:<ol>
         <li>/includes/classes/observers/auto.news_box_manager_metatags.php <span class="smaller">(Added in v2.2.0)</span></li>
         <li>/includes/extra_datafiles/news_box_manager_file_database_names.php</li>
