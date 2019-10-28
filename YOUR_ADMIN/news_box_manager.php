@@ -665,7 +665,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             <?php echo zen_draw_label(TEXT_NEWS_METATAGS_KEYWORDS, 'news_metatags_keywords', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
                 <div class="input-group">
-                    <?php echo zen_draw_textarea_field("news_metatags_keywords[$lang_id]", 'soft', '100%', '5', $nInfo->news_metatags_keywords[$lang_id], 'class="noEditor form-control"'); ?>
+                    <?php echo zen_draw_textarea_field("news_metatags_keywords[$lang_id]", 'soft', '100%', '1', $nInfo->news_metatags_keywords[$lang_id], 'class="noEditor form-control"'); ?>
                 </div>
             </div>
         </div>
@@ -674,7 +674,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             <?php echo zen_draw_label(TEXT_NEWS_METATAGS_DESCRIPTION, 'news_metatags_description', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
                 <div class="input-group">
-                    <?php echo zen_draw_textarea_field("news_metatags_description[$lang_id]", 'soft', '100%', '5', $nInfo->news_metatags_description[$lang_id], 'class="noEditor form-control"'); ?>
+                    <?php echo zen_draw_textarea_field("news_metatags_description[$lang_id]", 'soft', '100%', '2', $nInfo->news_metatags_description[$lang_id], 'class="noEditor form-control"'); ?>
                 </div>
             </div>
         </div>
@@ -738,7 +738,27 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             $submit_buttons .= zen_draw_hidden_field("news_metatags_keywords[$lang_id]", $nInfo->news_metatags_keywords[$lang_id]);
             $submit_buttons .= zen_draw_hidden_field("news_metatags_description[$lang_id]", $nInfo->news_metatags_description[$lang_id]);
         }
+        
+        // -----
+        // If the news-content doesn't contain any formatting HTML, convert any new-lines to <br>'s so that the on-screen formatting looks "nicer".
+        //
         $news_content = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $nInfo->news_content[$lang_id]) ? nl2br($nInfo->news_content[$lang_id]) : $nInfo->news_content[$lang_id]);
+        
+        // -----
+        // Enable the preview display of any images where the admin has specified an image name in either an href="" or src="" attribute
+        // using a relocatable form of that name, e.g. src="images/somefile.jpg".
+        //
+        $news_content = preg_replace(
+            array(
+                '#href="' . DIR_WS_IMAGES . '#',
+                '#src="' . DIR_WS_IMAGES . '#'
+            ),
+            array(
+                'href="../' . DIR_WS_IMAGES,
+                'src="../' . DIR_WS_IMAGES
+            ),
+            $news_content
+        );
 ?>
     <div class="row">
         <div class="col-sm-6 pageHeading">
@@ -753,15 +773,15 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
     <div id="metatags-<?php echo $lang_id; ?>" class="collapse">
         <div class="row nb-padding">
             <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_TITLE; ?></strong></div>
-            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_title[$lang_id]) ? TEXT_NOT_ENTERED : $nInfo->news_metatags_title[$lang_id]; ?></div>
+            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_title[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_title[$lang_id]; ?></div>
         </div>
         <div class="row nb-padding">
             <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_KEYWORDS; ?></strong></div>
-            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_keywords[$lang_id]) ? TEXT_NOT_ENTERED : $nInfo->news_metatags_keywords[$lang_id]; ?></div>
+            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_keywords[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_keywords[$lang_id]; ?></div>
         </div>
         <div class="row nb-padding">
             <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_DESCRIPTION; ?></strong></div>
-            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_description[$lang_id]) ? TEXT_NOT_ENTERED : $nInfo->news_metatags_description[$lang_id]; ?></div>
+            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_description[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_description[$lang_id]; ?></div>
         </div>
     </div>
     <hr />
@@ -974,7 +994,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             $nInfo = new objectInfo($news->fields);
         }
 ?>
-            <tr onclick="document.location.href='<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=new');?>'" role="button"<?php echo $row_class; ?>>
+            <tr onclick="document.location.href='<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=modify');?>'" role="button"<?php echo $row_class; ?>>
                 <td class="text-center"><?php echo $news->fields['box_news_id']; ?></td>
                 <td>
                     <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=previewonly');?>"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<?php echo $news->fields['news_title']; ?>
