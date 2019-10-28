@@ -26,6 +26,7 @@ Additional changes:
 ## Additional Documentation
 
 - [Admin Tool Processing](pages/admin_tool_states.md)
+- [Storefront Processing](pages/storefront.md)
 
 
 
