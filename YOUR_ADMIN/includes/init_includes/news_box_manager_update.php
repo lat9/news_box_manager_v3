@@ -201,6 +201,11 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
          VALUES 
             ('All Articles: Display Mode', 'NEWS_BOX_ALL_ARTICLES_DISPLAY', 'Table', 'Choose the format used to display the articles on the <code>all_articles</code> page.  The <em>Table</em> format displays the most recent articles in a table-type format.  The <em>Listing</em> format displays the most recent articles in a listing format.', $cgi, 405, now(), NULL, 'zen_cfg_select_option(array(\'Table\', \'Listing\'),')"
     );
+    $db->Execute(
+        "DELETE FROM " . TABLE_CONFIGURATION . "
+          WHERE configuration_key = 'NEWS_BOX_CONTENT_LENGTH'
+          LIMIT 1"
+    );
     
     // -----
     // Rearranging all configuration settings' sort-orders.

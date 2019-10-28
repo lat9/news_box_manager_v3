@@ -50,7 +50,7 @@ $sql = "CREATE TABLE IF NOT EXISTS " . TABLE_BOX_NEWS . " (
     `news_status` tinyint(1) default 0,
     `news_content_type` tinyint(1) NOT NULL default 1,
     PRIMARY KEY  (`box_news_id`)
-) ENGINE=MyISAM";
+)";
 $db->Execute($sql);
 
 $sql = "CREATE TABLE IF NOT EXISTS " . TABLE_BOX_NEWS_CONTENT . " (
@@ -62,7 +62,7 @@ $sql = "CREATE TABLE IF NOT EXISTS " . TABLE_BOX_NEWS_CONTENT . " (
     `news_metatags_keywords` text,
     `news_metatags_description` text,
     PRIMARY KEY (`languages_id`,`box_news_id`)
-) ENGINE=MyISAM DEFAULT CHARACTER SET " . DB_CHARSET;
+)";
 $db->Execute($sql);
 
 // -----

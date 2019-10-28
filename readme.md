@@ -6,16 +6,16 @@ See the plugin's [support-thread](https://www.zen-cart.com/showthread.php?216422
 
 v3.0.0 (and later) of _**News Box Manager**_ builds on the [previous](https://github.com/lat9/news_box_manager) versions of the plugin, adding the following features _for Zen Cart 1.5.6 and later_:
 
-2. Enables the creation of up to four (4) different types of 'news', each separately manageable.
+1. Enables the creation of up to four (4) different types of 'news', each separately manageable.
 	1. Separate admin tools for each type, enables different admin profiles to manage each news type.
 	2. An additional tool enables the management of _all_ news types.
 	3. Two (2) storefront sideboxes are now provided, enabling different news types' to be displayed in different locations.
-1. Uses the `zc156` admin's bootstrap support for its admin-tool displays.
+2. Uses the `zc156` admin's bootstrap support for its admin-tool displays.
 	1. Adds search and sort controls to the admin-level tools, making it easier to manage your news articles.
 	2. Adds controls to the admin's article-listing, enabling you to make a copy of an article and/or to move an article to a different news-type.
 3. Changes the storefront `news_archive` and `more_news` pages to be `all_articles` and `article`, respectively.
 	1. Previous pages' header-processing remains to redirect access to those pages (permanently) to their new homes!
-2. Watches for admin-level language-addition and -removal actions, adjusting the articles' news-content accordingly.
+4. Watches for admin-level language-addition and -removal actions, adjusting the articles' news-content accordingly.
 
 Additional changes:
 
