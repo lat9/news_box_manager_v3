@@ -25,7 +25,7 @@ Additional changes:
 
 ## Additional Documentation
 
-- [Admin Tool Processing](../pages/admin_tool_states.md)
+- [Admin Tool Processing](pages/admin_tool_states.md)
 
 
 
