@@ -15,4 +15,4 @@
 // performs a "Redirect Permanent" to the 'all_articles' page ... just in case
 // the link was previously bookmarked.
 //
-zen_redirect(zen_href_link(FILENAME_ALL_ARTICLES), '301'));
+zen_redirect(zen_href_link(FILENAME_ALL_ARTICLES), '301');
