@@ -20,10 +20,10 @@ if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
 // 70-109 .. Category-specific news settings
 //
 $db->Execute(
-    "INSERT INTO " . TABLE_CONFIGURATION . " 
-        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) 
+    "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
+        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
      VALUES 
-        ('News Box Manager Version', 'NEWS_BOX_MODULE_VERSION', '" . NEWS_BOX_CURRENT_VERSION_DATE . "', 'The News Box Manager version number and release date.', $cgi, 10, now(), 'trim('),
+        ('News Box Manager Version', 'NEWS_BOX_MODULE_VERSION', '0.0.0', 'The News Box Manager version number and release date.', $cgi, 10, now(), NULL, 'trim('),
         
         ('Items to Show in Sidebox', 'NEWS_BOX_SHOW_NEWS', '5', 'Set the maximum number of the latest-news titles to show in the &quot;Latest News&quot; sidebox.', $cgi, 40, now(), NULL, NULL),
 
