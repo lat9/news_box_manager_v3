@@ -36,7 +36,7 @@ $news_box_query = $db->Execute(
 );
 if ($news_box_query->EOF) {
     $messageStack->add_session(TEXT_NEWS_ARTICLE_NOT_FOUND, 'caution');
-    zen_redirect(zen_href_link(FILENAME_ALL_ARTICLEs));
+    zen_redirect(zen_href_link(FILENAME_ALL_ARTICLES));
 }
 
 $news_title = $news_box_query->fields['news_title'];
