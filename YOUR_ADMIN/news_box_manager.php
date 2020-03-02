@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
@@ -542,6 +542,7 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
     if ($action == 'modify' || $action == 'updateedit') {
         $form_action = 'updatepreview' . "&amp;nID=$nID";
         $hidden_field = zen_draw_hidden_field('nID', $nID);
+        $hidden_field .= ($all_news_types) ? '' : zen_draw_hidden_field('news_content_type', $news_box_type);
         $cancel_link = zen_href_link($news_box_script_name, $page_get_params . "nID=$nID");
     } else {
         $form_action = 'newpreview';
