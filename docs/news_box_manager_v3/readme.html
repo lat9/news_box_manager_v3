@@ -27,7 +27,7 @@ img { margin-left: 20px; max-width: 95%; }
 
 <body>
 <h1>News Box Manager &mdash; for Zen Cart v1.5.6 and Later</h1>
-<h3>Version 3.0.3</h3>
+<h3>Version 3.0.3a</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?226052-News-Box-Manager-v3-0-0-Support-Thread" target="_blank">News Box Manager v3.0.0 [Support Thread]</a></p>
 <p>GitHub repository: <a href="https://github.com/lat9/news_box_manager_v3" target="_blank">https://github.com/lat9/news_box_manager_v3</a></p>
 <p>This plugin represents a restructuring of the <a href="https://www.zen-cart.com/downloads.php?do=file&id=1968" target="_blank">News Box Manager -- v2.x.x</a> for Zen Cart v1.5.x, enabling the plugin to support current Zen Cart and PHP versions.</p>
@@ -82,7 +82,7 @@ img { margin-left: 20px; max-width: 95%; }
     <li>/includes/templates/template_default/sideboxes/tpl_news_box_sidebox.php</li>
     <li>/includes/templates/template_default/templates/tpl_modules_news_box_format.php</li>
     <li>/includes/templates/template_default/templates/tpl_all_articles_default.php</li>
-    <li>/includes/templates/template_default/templates/tpl_article.php</li>
+    <li>/includes/templates/template_default/templates/tpl_article_default.php</li>
     <li>/includes/templates/YOUR_TEMPLATE/css/stylesheet_news_box_manager.css</li>
     <li><em>Optional, see above</em>: <span class="template">/includes/templates/YOUR_TEMPLATE/templates/tpl_index_default.php</span></li>
     <li>/YOUR_ADMIN/news_box_manager.php</li>
@@ -96,8 +96,8 @@ img { margin-left: 20px; max-width: 95%; }
     <li>/YOUR_ADMIN/includes/extra_datafiles/news_box_manager_sanitization.php <span class="smaller">(Added in v2.1.1)</span></li>
     <li>/YOUR_ADMIN/includes/functions/news_box_manager_functions.php</li>
     <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
-    <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_install.php</li>
-    <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_update.php</li>
+    <li>/YOUR_ADMIN/includes/init_includes/news_box_manager_install.php</li>
+    <li>/YOUR_ADMIN/includes/init_includes/news_box_manager_update.php</li>
     <li>/YOUR_ADMIN/includes/languages/english/news_box_manager.php</li>
     <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/news_box_manager_menu_name.php</li>
   </ol></li>
@@ -112,6 +112,9 @@ img { margin-left: 20px; max-width: 95%; }
 
 <h2>Version History</h2>
 <ul>
+  <li>v3.0.3a, 2020-03-15:<ul>
+    <li>BUGFIX: (Documentation only) Correct distributed file list (again!).  Also removes unused file from the distribution.</li>
+  </ul></li>
   <li>v3.0.3, 2020-03-02:<ul>
     <li>BUGFIX: PHP missing-constant warning when updating a specific article type in the admin.</li>
     <li>The following files were changed:<ol>
