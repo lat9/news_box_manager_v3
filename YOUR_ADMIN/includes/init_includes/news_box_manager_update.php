@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
 //
 if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
     die('Illegal Access');
@@ -29,12 +29,12 @@ if (version_compare($nb_current_version, '2.2.0', '<')) {
     $db->Execute(
         "UPDATE " . TABLE_BOX_NEWS . "
             SET `news_added_date` = '0001-01-01 00:00:00'
-          WHERE `news_added_date` = '0000-00-00 00:00:00'"
+          WHERE CAST(`news_added_date` AS CHAR(20)) = '0000-00-00 00:00:00'"
     );
     $db->Execute(
         "UPDATE " . TABLE_BOX_NEWS . "
             SET `news_end_date` = NULL
-          WHERE `news_end_date` = '0000-00-00 00:00:00'"
+          WHERE CAST(`news_end_date` AS CHAR(20)) = '0000-00-00 00:00:00'"
     );
     if (!$sniffer->field_exists(TABLE_BOX_NEWS, 'news_content_type')) {
         $db->Execute(
