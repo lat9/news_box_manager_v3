@@ -1,13 +1,19 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
 // | Dedicated to Memory of Amelita "Emmy" Abordo Gelarderes              |
 // +----------------------------------------------------------------------+
 //
+
+// -----
+// In Zen Cart 1.5.7 and later, the language extra-definitions are loaded via a class method,
+// so the $template_dir needs to be declared as global.
+//
+global $template_dir;
 
 // -----
 // Pull in the storefront's extra_definitions, contains the BOX_NEWS_NAME_TYPEx definitions.
