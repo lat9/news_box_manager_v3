@@ -532,7 +532,7 @@ switch ($action) {
         break;
 }
 ?>
-    <h1><?php echo NEWS_BOX_HEADING_TITLE; ?> <span class="smaller"><?php echo $subheading; ?></span></h1>
+    <h1><?php echo NEWS_BOX_MANAGER_HEADING_TITLE; ?> <span class="smaller"><?php echo $subheading; ?></span></h1>
 <?php
 // -----
 // Editing an existing article or inserting a new one ... noting that we can also come back here

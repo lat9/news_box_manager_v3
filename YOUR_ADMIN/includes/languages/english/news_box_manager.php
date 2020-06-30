@@ -1,14 +1,14 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
 // | Dedicated to Memory of Amelita "Emmy" Abordo Gelarderes              |
 // +----------------------------------------------------------------------+
 //
-define('NEWS_BOX_HEADING_TITLE', 'News Box Manager');
+define('NEWS_BOX_MANAGER_HEADING_TITLE', 'News Box Manager');
     define('NEWS_BOX_SUBHEADING_LISTING', '(Viewing &quot;%s&quot; News)');
     define('NEWS_BOX_SUBHEADING_PREVIEW', '(Previewing)');
     define('NEWS_BOX_SUBHEADING_EDIT', '(Editing)');

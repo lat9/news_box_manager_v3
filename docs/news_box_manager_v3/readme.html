@@ -113,8 +113,11 @@ img { margin-left: 20px; max-width: 95%; }
 <h2>Version History</h2>
 <ul>
   <li>v3.0.5-beta1, 2020-06-30:<ul>
-    <li>ZC157: Need to declare variable as 'global' due to change in &quot;extra_definitions&quot; loading in the admin.</li>
+    <li>ZC-157: Need to declare variable as 'global' due to change in &quot;extra_definitions&quot; loading in the admin.</li>
+    <li>BUGFIX: Correct PHP duplicate constant notice.</li>
     <li>The following files were changed:<ol>
+        <li>/YOUR_ADMIN/news_box_manager.php</li>
+        <li>/YOUR_ADMIN/includes/languages/english/news_box_manager.php</li>
         <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/news_box_manager_menu_name.php</li>
         <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
     </ol></li>
