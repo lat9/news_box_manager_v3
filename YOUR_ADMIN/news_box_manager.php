@@ -471,13 +471,50 @@ switch ($action) {
 <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
 <style>
 <!--
-.green { color: green; }
-.red { color: red; }
-.meta-tags { text-align: center; padding: 0.5em 0; }
-.large { font-size: large; }
-.larger { font-size: larger; }
-.smaller { font-size: smaller; }
-.nb-padding { padding: 0.5em; }
+.green { 
+    color: green; 
+}
+.red { 
+    color: red; 
+}
+.meta-tags { 
+    text-align: center; 
+    padding: 0.5em 0; 
+}
+.large { 
+    font-size: large; 
+}
+.larger { 
+    font-size: larger; 
+}
+.smaller { 
+    font-size: smaller; 
+}
+.nb-padding { 
+    padding: 0.5em; 
+}
+
+.edit i.base {
+    color: #008000;
+}
+.delete i.base {
+    color: #f00;
+}
+.move i.base {
+    color: #800080;
+}
+.copy i.base {
+    color: #00f;
+}
+.edit i.overlay, 
+.delete i.overlay, 
+.move i.overlay, 
+.copy i.overlay, 
+.attributes-off i.overlay, 
+.pricemanager-on i.overlay, 
+.metatags-off i.overlay {
+    color: white;
+}
 -->
 </style>
 <script src="includes/menu.js"></script>
