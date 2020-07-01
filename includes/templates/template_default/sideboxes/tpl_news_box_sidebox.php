@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
@@ -16,23 +16,23 @@
 if ($news_sidebox_layout == 'List') {
     $content = '<div class="sideBoxContent newsBoxList"><ol>' . PHP_EOL;  
     while (!$news_box_query->EOF) {
-        $news_id = $news_box_query->fields['box_news_id'];
-        $news_title = $news_box_query->fields['news_title'];
+        $news_sidebox_id = $news_box_query->fields['box_news_id'];
+        $news_sidebox_title = $news_box_query->fields['news_title'];
         $news_content_type = $news_box_query->fields['news_content_type'];
         $content_class = "nb-t$news_content_type";
-        $content .= '<li><a href="' . zen_href_link(FILENAME_ARTICLE, "p=$news_id") . '" class="' . $content_class . '">' . $news_title. '</a></li>' . PHP_EOL; 
+        $content .= '<li><a href="' . zen_href_link(FILENAME_ARTICLE, "p=$news_sidebox_id") . '" class="' . $content_class . '">' . $news_sidebox_title. '</a></li>' . PHP_EOL; 
         $news_box_query->MoveNext();
     }
     $content .= '</ol></div>' . PHP_EOL;
 } else {
     $content = '<div class="sideBoxContent newsBoxGrid">' . PHP_EOL;
     while (!$news_box_query->EOF) {
-        $news_id = $news_box_query->fields['box_news_id'];
-        $news_title = $news_box_query->fields['news_title'];
+        $news_sidebox_id = $news_box_query->fields['box_news_id'];
+        $news_sidebox_title = $news_box_query->fields['news_title'];
         $news_content_type = $news_box_query->fields['news_content_type'];
         
-        $news_content = ($news_sidebox_layout == 'GridTitleDateDesc') ? $news_box_query->fields['news_content'] : '';
-        $news_content = zen_trunc_string($news_content);
+        $news_sidebox_content = ($news_sidebox_layout == 'GridTitleDateDesc') ? $news_box_query->fields['news_content'] : '';
+        $news_sidebox_content = zen_trunc_string($news_content);
         
         $news_start_date = $news_box_query->fields['news_start_date'];
         $news_end_date = $news_box_query->fields['news_end_date'];
@@ -47,9 +47,9 @@ if ($news_sidebox_layout == 'List') {
         $content_class = "nb-t$news_content_type";
         
         $content .= '<div class="nb-grid-inner ' . $content_class . '">' . PHP_EOL;
-        $content .= '   <a href="' . zen_href_link(FILENAME_ARTICLE, "p=$news_id") . '" class="' . $content_class . '">' . $news_title. '</a>' . PHP_EOL;
+        $content .= '   <a href="' . zen_href_link(FILENAME_ARTICLE, "p=$news_sidebox_id") . '" class="' . $content_class . '">' . $news_sidebox_title. '</a>' . PHP_EOL;
         $content .= '   <div class="nb-dates">' . $news_date_range . '</div>' . PHP_EOL;
-        $content .= '   <div class="nb-content">' . $news_content . '</div>' . PHP_EOL;
+        $content .= '   <div class="nb-content">' . $news_sidebox_content . '</div>' . PHP_EOL;
         $content .= '</div>' . PHP_EOL;
         $news_box_query->MoveNext();
     }
