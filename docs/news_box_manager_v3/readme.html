@@ -27,11 +27,11 @@ img { margin-left: 20px; max-width: 95%; }
 
 <body>
 <h1>News Box Manager &mdash; for Zen Cart v1.5.6 and Later</h1>
-<h3>Version 3.0.5</h3>
+<h3>Version 3.1.0</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?226052-News-Box-Manager-v3-0-0-Support-Thread" target="_blank">News Box Manager v3.0.0 [Support Thread]</a></p>
 <p>GitHub repository: <a href="https://github.com/lat9/news_box_manager_v3" target="_blank">https://github.com/lat9/news_box_manager_v3</a></p>
 <p>This plugin represents a restructuring of the <a href="https://www.zen-cart.com/downloads.php?do=file&id=1968" target="_blank">News Box Manager -- v2.x.x</a> for Zen Cart v1.5.x, enabling the plugin to support current Zen Cart and PHP versions.</p>
-<p>For additional information, please refer to the plugin's <a href="https://github.com/lat9/news_box_manager_v3/blob/master/readme.md" target="_blank">online documentation</a>.</p>
+<p>For additional information (including the v3.1.0 integration with <a href="https://www.zen-cart.com/downloads.php?do=file&id=367&styleid=2" target="_blank">Sitemap XML</a>), please refer to the plugin's <a href="https://github.com/lat9/news_box_manager_v3/blob/master/readme.md" target="_blank">online documentation</a>.</p>
 
 <h2>Purpose</h2>
 <p>This plugin enables you to write news-related content for your Zen Cart store, displaying the most recent articles in sideboxes for your customers to view.</p>
@@ -77,6 +77,7 @@ img { margin-left: 20px; max-width: 95%; }
     <li>/includes/modules/pages/article/header_php.php</li>
     <li>/includes/modules/pages/more_news/header_php.php</li>
     <li>/includes/modules/pages/news_archive/header_php.php</li>
+    <li>/includes/modules/pages/sitemapxml/sitemapxml_boxnews3.php <span class="smaller">(Added in v3.1.0)</span></li>
     <li>/includes/modules/sideboxes/news_box_sidebox.php</li>
     <li>/includes/modules/sideboxes/news_box_sidebox2.php</li>
     <li>/includes/templates/template_default/sideboxes/tpl_news_box_sidebox.php</li>
@@ -112,6 +113,13 @@ img { margin-left: 20px; max-width: 95%; }
 
 <h2>Version History</h2>
 <ul>
+  <li>v3.2.0-beta1, 2020-07-07:<ul>
+    <li>CHANGE: Add <b><i>Sitemap XML</i></b> integration.</li>
+    <li>The following files were changed or <span class="added">added</span>:<ol>
+        <li><span class="added">/includes/modules/pages/sitemapxml/sitemapxml_boxnews3.php</span></li>
+        <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
+    </ol></li>
+  </ul></li>
   <li>v3.0.5, 2020-07-02:<ul>
     <li>ZC-157: Need to declare variable as 'global' due to change in &quot;extra_definitions&quot; loading in the admin.</li>
     <li>BUGFIX: Correct PHP duplicate constant notice.</li>

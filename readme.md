@@ -27,6 +27,5 @@ Additional changes:
 
 - [Admin Tool Processing](pages/admin_tool_states.md)
 - [Storefront Processing](pages/storefront.md)
-
-
+- [Sitemap XML Integration](pages/sitemapxml.md).  Added in v3.1.0.
 
