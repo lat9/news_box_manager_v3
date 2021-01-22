@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2021, Vinos de Frutas Tropicales
 //
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -14,8 +14,8 @@ if (empty($_SESSION['admin_id'])) {
     return;
 }
 
-define('NEWS_BOX_CURRENT_VERSION', '3.1.0-beta1');
-define('NEWS_BOX_CURRENT_UPDATE_DATE', '2020-07-07');
+define('NEWS_BOX_CURRENT_VERSION', '3.1.0');
+define('NEWS_BOX_CURRENT_UPDATE_DATE', '2021-01-22');
 define('NEWS_BOX_CURRENT_VERSION_DATE', NEWS_BOX_CURRENT_VERSION . ' (' . NEWS_BOX_CURRENT_UPDATE_DATE . ')');
 
 // -----
