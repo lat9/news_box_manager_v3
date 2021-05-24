@@ -32,20 +32,20 @@ if ($news_box_format == 'Individual') {
     $news_limit = '';
     $news_box_query_raw =
         "SELECT n.*, nc.news_title, nc.news_content
-           FROM
-              (SELECT box_news_id, news_content_type, MAX(news_start_date) as last_updated
-                 FROM " . TABLE_BOX_NEWS . "
-                WHERE news_status = 1
-                  AND now() >= news_start_date
-                  AND (news_end_date IS NULL OR now() <= news_end_date)
-                GROUP BY news_content_type) AS r
-              INNER JOIN " . TABLE_BOX_NEWS . " AS n
-                  ON n.news_content_type = r.news_content_type
-                 AND n.news_start_date = r.last_updated
-                 $news_and_clause
-              INNER JOIN " . TABLE_BOX_NEWS_CONTENT . " AS nc
-                  ON nc.box_news_id = n.box_news_id
-                 AND nc.languages_id = $languages_id";
+           FROM " . TABLE_BOX_NEWS . " n
+                INNER JOIN (
+                    SELECT news_content_type, MAX(news_start_date) as last_updated
+                      FROM " . TABLE_BOX_NEWS . "
+                     WHERE news_status = 1
+                       AND now() >= news_start_date
+                       AND (news_end_date IS NULL OR now() <= news_end_date)
+                     GROUP BY news_content_type) AS r
+                INNER JOIN " . TABLE_BOX_NEWS_CONTENT . " AS nc
+                    ON nc.box_news_id = n.box_news_id
+                    AND nc.languages_id = $languages_id
+          WHERE n.news_content_type = r.news_content_type
+            AND n.news_start_date = r.last_updated
+            $news_and_clause";
 }
 
 if ($news_box_use_split) {
@@ -75,6 +75,5 @@ while (!$news_info->EOF) {
         $news[$news_box_id]['end_date'] = (NEWS_BOX_DATE_FORMAT == 'short') ? zen_date_short($news_info->fields['news_end_date']) : zen_date_long($news_info->fields['news_end_date']);
     }
     $news_info->MoveNext();
-  
 }
 unset($news_info, $news_and_clause, $max_news_items);
