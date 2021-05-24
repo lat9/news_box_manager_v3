@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2021, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
@@ -80,4 +80,4 @@ if (!empty($news_sidebox_show_max) && ((int)$news_sidebox_show_max) > 0) {
 // "Reset" the news-sidebox number, in case multiple sidebox versions are available, so that we'll
 // render the base (SideBox #1) if it's lower in the sort-order than previous versions.
 //
-unset($news_sidebox_num);
+unset($news_sidebox_num, $news_and_clause, $max_news_items);

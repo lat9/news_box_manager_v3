@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2021, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
@@ -77,4 +77,4 @@ while (!$news_info->EOF) {
     $news_info->MoveNext();
   
 }
-unset($news_info);
+unset($news_info, $news_and_clause, $max_news_items);
