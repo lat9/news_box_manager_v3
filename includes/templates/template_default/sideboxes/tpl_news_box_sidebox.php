@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2021, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
@@ -32,7 +32,7 @@ if ($news_sidebox_layout == 'List') {
         $news_content_type = $news_box_query->fields['news_content_type'];
         
         $news_sidebox_content = ($news_sidebox_layout == 'GridTitleDateDesc') ? $news_box_query->fields['news_content'] : '';
-        $news_sidebox_content = zen_trunc_string($news_content);
+        $news_sidebox_content = zen_trunc_string($news_sidebox_content);
         
         $news_start_date = $news_box_query->fields['news_start_date'];
         $news_end_date = $news_box_query->fields['news_end_date'];
