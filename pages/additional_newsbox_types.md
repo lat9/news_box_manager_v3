@@ -22,10 +22,10 @@ First, determine the 'count' of different types of news that you want; I'll use 
         define('BOX_NEWS_NAME_TYPE2', 'Type2');
         define('BOX_NEWS_NAME_TYPE3', 'Type3');
         define('BOX_NEWS_NAME_TYPE4', 'Type4');
-        define('BOX_NEWS_NAME_TYPE1', 'Type5');
-        define('BOX_NEWS_NAME_TYPE2', 'Type6');
-        define('BOX_NEWS_NAME_TYPE3', 'Type7');
-        define('BOX_NEWS_NAME_TYPE4', 'Type8');
+        define('BOX_NEWS_NAME_TYPE5', 'Type5');
+        define('BOX_NEWS_NAME_TYPE6', 'Type6');
+        define('BOX_NEWS_NAME_TYPE7', 'Type7');
+        define('BOX_NEWS_NAME_TYPE8', 'Type8');
         ```
    
 2. "Clone" additional admin tools.  Copy `/YOUR_ADMIN/news_box_manager4.php` to `/YOUR_ADMIN/news_box_manager5.php`, `/YOUR_ADMIN/news_box_manager6.php`, `/YOUR_ADMIN/news_box_manager7.php` and `/YOUR_ADMIN/news_box_manager8.php`. and edit each of those files to contain its unique article type.  Here's the code for `news_box_manager4.php` for reference.
