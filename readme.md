@@ -25,7 +25,7 @@ Additional changes:
 
 ## Additional Documentation
 
-- [Admin Tool Processing](wiki/Admin-Tool-Processing)
-- [Storefront Processing](wiki/Storefront-Processing)
-- [Sitemap XML Integration](wiki/Sitemap-XML-Integration).  Added in v3.1.0.
+- [Admin Tool Processing](/wiki/Admin-Tool-Processing)
+- [Storefront Processing](/wiki/Storefront-Processing)
+- [Sitemap XML Integration](/wiki/Sitemap-XML-Integration).  Added in v3.1.0.
 
