@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2024, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
@@ -25,16 +25,16 @@ $news_box_script_name = basename($PHP_SELF);
 // Pull in the "base" (i.e. all-types) language file, if this access is for a specific
 // type.
 //
-if ($news_box_script_name == FILENAME_NEWS_BOX_MANAGER . '.php') {
+if ($news_box_script_name === FILENAME_NEWS_BOX_MANAGER . '.php') {
     $news_box_type = 0;
     $news_type_name = NEWS_BOX_NAME_ALL;
     $all_news_types = true;
 } else {
     $news_box_type = (int)str_replace(
-        array(
+        [
             FILENAME_NEWS_BOX_MANAGER,
             '.php'
-        ),
+        ],
         '',
         $news_box_script_name
     );
@@ -55,8 +55,8 @@ $languages = zen_get_languages();
 // -----
 // Handle (and sanitize) the common $_GET variables.
 //
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
-$nbm_page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+$action = $_GET['action'] ?? '';
+$nbm_page = (int)($_GET['page'] ?? 1);
 if ($nbm_page < 1) {
     $nbm_page = 1;
     unset($_GET['page']);
@@ -67,14 +67,14 @@ if ($current_sort !== false && ($current_sort < 0 || $current_sort > 3)) {
     unset($_GET['s']);
 }
 $keywords = (isset($_GET['search'])) ? (string)$_GET['search'] : false;
-$page_get_params = zen_get_all_get_params(array('action', 'nID'));
+$page_get_params = zen_get_all_get_params(['action', 'nID']);
 
 // -----
 // If the admin clicked the "Back" button from the news insert/update preview, 'reset'
 // the action to allow modification of the news article's information.
 //
 if (isset($_POST['edit'])) {
-    $action = ($_POST['edit'] == 'newedit') ? 'newedit' : 'updateedit';
+    $action = ($_POST['edit'] === 'newedit') ? 'newedit' : 'updateedit';
 }
 
 // -----
@@ -91,21 +91,21 @@ switch ($action) {
         $error = false;
 
         $nID = (!empty($_POST['nID'])) ? (int)$_POST['nID'] : 0;
-        
+
         // -----
         // Add the starting/ending times to the news article's starting/ending dates.
         //
         $news_start_date = ((empty($_POST['news_start_date'])) ? date('Y-m-d') : zen_db_prepare_input($_POST['news_start_date'])) . ' 00:00:00';
         $news_end_date = (empty($_POST['news_end_date'])) ? 'null' : (zen_db_prepare_input($_POST['news_end_date']) . ' 23:59:59');
-        
-        $sql_data_array = array (
+
+        $sql_data_array = [
             'news_start_date' => $news_start_date,
             'news_end_date' => $news_end_date,
             'news_content_type' => $news_content_type,
             'news_status' => (int)$_POST['news_status'],
-        );
+        ];
 
-        if ($action == 'insert') {
+        if ($action === 'insert') {
             $sql_data_array['news_added_date'] = 'now()';
             zen_db_perform(TABLE_BOX_NEWS, $sql_data_array);
             $nID = zen_db_insert_id();
@@ -121,15 +121,15 @@ switch ($action) {
             $lang_id = $current_language['id'];
             $news_title = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $_POST['news_title'][$lang_id]);
             $news_content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $_POST['news_content'][$lang_id]);
-            $sql_data_array = array (
+            $sql_data_array = [
                 'news_title' => trim($news_title),
                 'news_content' => trim($news_content),
                 'news_metatags_title' => trim(zen_clean_html($news_metatags_title[$lang_id])),
                 'news_metatags_keywords' => (empty(trim(zen_clean_html($news_metatags_keywords[$lang_id])))) ? 'null' : trim(zen_clean_html($news_metatags_keywords[$lang_id])),
                 'news_metatags_description' => (empty(trim(zen_clean_html($news_metatags_description[$lang_id])))) ? 'null' : trim(zen_clean_html($news_metatags_description[$lang_id])),
-            );
+            ];
 
-            if ($action == 'insert') {
+            if ($action === 'insert') {
                 $sql_data_array['box_news_id'] = $nID;
                 $sql_data_array['languages_id'] = $lang_id;
                 zen_db_perform(TABLE_BOX_NEWS_CONTENT, $sql_data_array);
@@ -155,14 +155,14 @@ switch ($action) {
         }
         zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         break;
-        
+
     // -----
     // Move Confirmation: Issued from the 'Move' sidebox.  Moves the specified news article to a
     // different 'Type'.
     //
     case 'moveconfirm':
         $link_parms = $page_get_params;
-        if (isset($_POST['nID']) && isset($_POST['news_content_type'])) {
+        if (isset($_POST['nID'], $_POST['news_content_type'])) {
             $nID = (int)$_POST['nID'];
             $news_content_type = (int)$_POST['news_content_type'];
             if ($news_content_type >= 1 && $news_content_type <= 4) {
@@ -178,7 +178,7 @@ switch ($action) {
         }
         zen_redirect(zen_href_link($news_box_script_name, $link_parms));
         break;
-        
+
     // -----
     // Copy Confirmation: Issued from the 'Copy' sidebox.  Makes a copy (currently disabled) of the
     // article in the article's current 'News Type'.
@@ -200,9 +200,9 @@ switch ($action) {
             );
             if (!$article->EOF && !$article_content->EOF) {
                 $article_base = $article->fields;
-                
+
                 unset($article_base['box_news_id'], $article_base['news_modified_date']);
-                
+
                 // -----
                 // If the news-end-date is empty, i.e. NULL, remove it from the to-be-recorded
                 // record to prevent unwanted '0000-00-00 00:00:00' dates from being stored.
@@ -210,13 +210,13 @@ switch ($action) {
                 if (empty($article_base['news_end_date'])) {
                     unset($article_base['news_end_date']);
                 }
-                
+
                 $article_base['news_added_date'] = 'now()';
                 $article_base['news_status'] = 0;
-                
+
                 zen_db_perform(TABLE_BOX_NEWS, $article_base);
                 $new_nID = zen_db_insert_id();
-                
+
                 foreach ($article_content as $content) {
                     $content['box_news_id'] = $new_nID;
                     zen_db_perform(TABLE_BOX_NEWS_CONTENT, $content);
@@ -227,7 +227,7 @@ switch ($action) {
         }
         zen_redirect(zen_href_link($news_box_script_name, $link_parms));
         break;
-        
+
     // -----
     // "Quick" change of status, via click on the red/green status icons from an article's listing display.
     //
@@ -235,7 +235,7 @@ switch ($action) {
     // empty in **any** of the store's defined languages!
     //
     case 'status':
-        $nID = (!empty($_GET['nID'])) ? (int)$_GET['nID'] : 0;
+        $nID = (int)($_GET['nID'] ?? 0);
         $news = $db->Execute(
             "SELECT news_status 
                FROM " . TABLE_BOX_NEWS . " 
@@ -257,15 +257,15 @@ switch ($action) {
                     break;
                 }
             }
-            $news_status = ($news->fields['news_status'] == 0) ? 1 : 0;
-            if ($news_status == 1 && !$content_ok) {
+            $news_status = ($news->fields['news_status'] === '0') ? 1 : 0;
+            if ($news_status === 1 && $content_ok === false) {
                 $messageStack->add_session(ERROR_NEWS_TITLE_CONTENT . ERROR_NEWS_NOT_ENABLED, 'error');
             } else {
                 $db->Execute(
-                    "UPDATE " . TABLE_BOX_NEWS . " 
-                        SET news_status = $news_status, 
-                            news_modified_date = now() 
-                      WHERE box_news_id = $nID 
+                    "UPDATE " . TABLE_BOX_NEWS . "
+                        SET news_status = $news_status,
+                            news_modified_date = now()
+                      WHERE box_news_id = $nID
                       LIMIT 1"
                 );
             }
@@ -284,7 +284,7 @@ switch ($action) {
         }
         zen_redirect(zen_href_link($news_box_script_name, $params));
         break;
-        
+
     // -----
     // 1) Preview Only: Issued via click on the 'preview' icon on a news article's listing entry.
     // 2) Modify Article: Issued via click on the 'Edit' icon from an existing article's listing entry.
@@ -304,7 +304,7 @@ switch ($action) {
         if (empty($_GET['nID']) || ((int)$_GET['nID'] < 1)) {
             zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
-        
+
         $nID = (int)$_GET['nID'];
         $news_info = $db->Execute(
             "SELECT *
@@ -316,7 +316,7 @@ switch ($action) {
             zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
         $nInfo = new objectInfo($news_info->fields);
-        
+
         // -----
         // The news_start_date (required) and news_end_date (optional) are stored as 'datetime'
         // fields, but entered as solely the date.  Make sure that the time-related portion of
@@ -326,7 +326,7 @@ switch ($action) {
         if (!empty($nInfo->news_end_date)) {
             $nInfo->news_end_date = substr($nInfo->news_end_date, 0, strpos($nInfo->news_end_date, ' '));
         }
-        
+
         $news_content_info = $db->Execute(
             "SELECT *
                FROM " . TABLE_BOX_NEWS_CONTENT . "
@@ -335,11 +335,11 @@ switch ($action) {
         if ($news_content_info->EOF) {
             zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
-        $nInfo->news_title = array();
-        $nInfo->news_content = array();
-        $nInfo->news_metatags_title = array();
-        $nInfo->news_metatags_keywords = array();
-        $nInfo->news_metatags_description = array();
+        $nInfo->news_title = [];
+        $nInfo->news_content = [];
+        $nInfo->news_metatags_title = [];
+        $nInfo->news_metatags_keywords = [];
+        $nInfo->news_metatags_description = [];
         foreach ($news_content_info as $news_content) {
             $lang_id = $news_content['languages_id'];
             $nInfo->news_title[$lang_id] = $news_content['news_title'];
@@ -361,41 +361,41 @@ switch ($action) {
     case 'updatepreview':
     case 'newedit':
     case 'updateedit':
-        if (empty($_POST) || (($action == 'updatepreview' || $action == 'updateedit') && empty($_POST['nID']))) {
+        if (empty($_POST) || (($action === 'updatepreview' || $action === 'updateedit') && empty($_POST['nID']))) {
             zen_redirect(zen_href_link($news_box_script_name, $page_get_params));
         }
-        
+
         // -----
         // On the transition from the new/edit action to its 'preview', make sure that
         // the required fields are set and valid.  If not, kick the admin back to the
         // editing page.
         //
-        if ($action == 'newpreview' || $action == 'updatepreview') { 
+        if ($action === 'newpreview' || $action === 'updatepreview') { 
             // -----
             // Validate the article's starting and ending dates.
             //
             $error = false;
             if (!empty($_POST['news_start_date'])) {
                 $date_elements = explode('-', $_POST['news_start_date']);
-                if (count($date_elements) != 3 || !checkdate((int)$date_elements[1], (int)$date_elements[2], (int)$date_elements[0])) {
+                if (count($date_elements) !== 3 || !checkdate((int)$date_elements[1], (int)$date_elements[2], (int)$date_elements[0])) {
                     $error = true;
                     $messageStack->add(ERROR_NEWS_START_DATE, 'error');
                 }
             }
             if (!empty($_POST['news_end_date'])) {
                 $date_elements = explode('-', $_POST['news_end_date']);
-                if (count($date_elements) != 3 || !checkdate((int)$date_elements[1], (int)$date_elements[2], (int)$date_elements[0])) {
+                if (count($date_elements) !== 3 || !checkdate((int)$date_elements[1], (int)$date_elements[2], (int)$date_elements[0])) {
                     $error = true;
                     $messageStack->add(ERROR_NEWS_END_DATE, 'error');
                 }
             }
             $news_start = (empty($_POST['news_start_date'])) ? date('Y-m-d') : $_POST['news_start_date'];
             $news_end = (empty($_POST['news_end_date'])) ? 'null' : $_POST['news_end_date'];
-            if (!$error && $news_end != 'null' && $news_start > $news_end) {
+            if ($error === false && $news_end !== 'null' && $news_start > $news_end) {
                 $error = true;
                 $messageStack->add(ERROR_NEWS_DATE_ISSUES, 'error');
             }
-            
+
             // -----
             // For the news article to be saved, it must have both a title and content in **all** languages defined for the store
             // and neither the title nor the content can contain any <script></script> tags.
@@ -416,36 +416,36 @@ switch ($action) {
                     break;
                 }
             }
-            if ($content_error) {
+            if ($content_error === true) {
                 $error = true;
                 $messageStack->add(ERROR_NEWS_TITLE_CONTENT, 'error');
             }
-            
-            if ($error) {
-                $action = ($action == 'newpreview') ? 'newedit' : 'updateedit';
+
+            if ($error === true) {
+                $action = ($action === 'newpreview') ? 'newedit' : 'updateedit';
             }
         }
         $nID = (int)$_POST['nID'];
         $nInfo = new objectInfo($_POST);
         break;
-        
+
     // -----
     // New Article: Issued via click on the 'Insert' button on the articles' listing page.
     //
     case 'new':
-        $parameters = array( 
+        $parameters = [
             'news_added_date' => '',
             'news_content_type' => ($all_news_types) ? 1 : $news_box_type,
             'news_modified_date' => '',
             'news_start_date' => '',
             'news_end_date' => '',
             'news_status' => 0,
-            'news_title' => array(),
-            'news_content' => array(),
-            'news_metatags_title' => array(),
-            'news_metatags_keywords' => array(),
-            'news_metatags_description' => array(),
-        );
+            'news_title' => [],
+            'news_content' => [],
+            'news_metatags_title' => [],
+            'news_metatags_keywords' => [],
+            'news_metatags_description' => [],
+        ];
         foreach ($languages as $current_language) {
             $lang_id = $current_language['id'];
             $parameters['news_title'][$lang_id] = '';
@@ -463,14 +463,13 @@ switch ($action) {
 }
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
 <head>
-<meta charset="<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
+<meta charset="<?= CHARSET ?>">
+<title><?= TITLE ?></title>
 <link rel="stylesheet" href="includes/stylesheet.css">
 <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
 <style>
-<!--
 .green { 
     color: green; 
 }
@@ -515,7 +514,6 @@ switch ($action) {
 .metatags-off i.overlay {
     color: white;
 }
--->
 </style>
 <script src="includes/menu.js"></script>
 <script src="includes/general.js"></script>
@@ -535,7 +533,7 @@ function init()
 // -->
 </script>
 <?php
-if ($editor_handler != '') {
+if ($editor_handler !== '') {
     include $editor_handler;
 }
 ?>
@@ -569,14 +567,14 @@ switch ($action) {
         break;
 }
 ?>
-    <h1><?php echo NEWS_BOX_MANAGER_HEADING_TITLE; ?> <span class="smaller"><?php echo $subheading; ?></span></h1>
+    <h1><?= NEWS_BOX_MANAGER_HEADING_TITLE ?> <span class="smaller"><?= $subheading ?></span></h1>
 <?php
 // -----
 // Editing an existing article or inserting a new one ... noting that we can also come back here
 // from an article's insert/update "Preview" to make changes prior to saving in the database.
 //
-if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $action == 'newedit') {
-    if ($action == 'modify' || $action == 'updateedit') {
+if ($action === 'modify' || $action === 'updateedit' || $action === 'new' || $action === 'newedit') {
+    if ($action === 'modify' || $action === 'updateedit') {
         $form_action = 'updatepreview' . "&amp;nID=$nID";
         $hidden_field = zen_draw_hidden_field('nID', $nID);
         $hidden_field .= ($all_news_types) ? '' : zen_draw_hidden_field('news_content_type', $news_box_type);
@@ -590,64 +588,64 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $page_get_params = '&amp;' . $page_get_params;
     }
 ?>
-    <?php echo zen_draw_form('news', $news_box_script_name, "action=$form_action" . $page_get_params, 'post', 'enctype="multipart/form-data" class="form-horizontal"') . $hidden_field; ?>
+    <?= zen_draw_form('news', $news_box_script_name, "action=$form_action" . $page_get_params, 'post', 'enctype="multipart/form-data" class="form-horizontal"') . $hidden_field ?>
         <div>
             <span class="floatButton text-right">
-                <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button>&nbsp;&nbsp;<a href="<?php echo $cancel_link; ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                <button type="submit" class="btn btn-primary"><?= IMAGE_PREVIEW ?></button>&nbsp;&nbsp;<a href="<?= $cancel_link ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a>
             </span>
         </div>
         
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_STATUS, 'news_status', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_NEWS_STATUS, 'news_status', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <label class="radio-inline"><?php echo zen_draw_radio_field('news_status', '1', ($nInfo->news_status == 1)) . TEXT_ENABLED; ?></label>
-                <label class="radio-inline"><?php echo zen_draw_radio_field('news_status', '0', ($nInfo->news_status == 0)) . TEXT_DISABLED; ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('news_status', '1', ($nInfo->news_status === '1')) . TEXT_ENABLED ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('news_status', '0', ($nInfo->news_status === '0')) . TEXT_DISABLED ?></label>
             </div>
         </div>
 <?php
     if ($all_news_types) {
-        $type_selections = array(
-            array('id' => 1, 'text' => BOX_NEWS_NAME_TYPE1),
-            array('id' => 2, 'text' => BOX_NEWS_NAME_TYPE2),
-            array('id' => 3, 'text' => BOX_NEWS_NAME_TYPE3),
-            array('id' => 4, 'text' => BOX_NEWS_NAME_TYPE4)
-        );
+        $type_selections = [
+            ['id' => 1, 'text' => BOX_NEWS_NAME_TYPE1],
+            ['id' => 2, 'text' => BOX_NEWS_NAME_TYPE2],
+            ['id' => 3, 'text' => BOX_NEWS_NAME_TYPE3],
+            ['id' => 4, 'text' => BOX_NEWS_NAME_TYPE4],
+        ];
         if (!isset($nInfo->news_content_type)) {
             $news_content_type = 1;
         }
 ?>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_CHOOSE_TYPE, 'news_content_type', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_NEWS_CHOOSE_TYPE, 'news_content_type', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_pull_down_menu('news_content_type', $type_selections, $nInfo->news_content_type, 'class="form-control"'); ?>
+                <?= zen_draw_pull_down_menu('news_content_type', $type_selections, $nInfo->news_content_type, 'class="form-control"') ?>
             </div>
         </div>
 <?php
     }
 ?>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_START_DATE, 'news_start_date', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_NEWS_START_DATE, 'news_start_date', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <div class="date input-group" id="datepicker-start">
                     <span class="input-group-addon datepicker_icon">
                         <i class="fa fa-calendar fa-lg"></i>
                     </span>
-                    <?php echo zen_draw_input_field('news_start_date', $nInfo->news_start_date, 'class="form-control"'); ?>
+                    <?= zen_draw_input_field('news_start_date', $nInfo->news_start_date, 'class="form-control"') ?>
                 </div>
-                <span class="help-block"><?php echo TEXT_NEWS_START_DATE_HELP; ?></span>
+                <span class="help-block"><?= TEXT_NEWS_START_DATE_HELP ?></span>
             </div>
         </div>
-        
+
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_END_DATE, 'news_end_date', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_NEWS_END_DATE, 'news_end_date', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <div class="date input-group" id="datepicker-end">
                     <span class="input-group-addon datepicker_icon">
                         <i class="fa fa-calendar fa-lg"></i>
                     </span>
-                    <?php echo zen_draw_input_field('news_end_date', $nInfo->news_end_date, 'class="form-control"'); ?>
+                    <?= zen_draw_input_field('news_end_date', $nInfo->news_end_date, 'class="form-control"') ?>
                 </div>
-                <span class="help-block"><?php echo TEXT_NEWS_END_DATE_HELP; ?></span>
+                <span class="help-block"><?= TEXT_NEWS_END_DATE_HELP ?></span>
             </div>
         </div>
 <?php 
@@ -658,65 +656,65 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $lang_image_file = $current_language['image'];
         $lang_name = $current_language['name'];
         $lang_image = zen_image(DIR_WS_CATALOG_LANGUAGES . "$lang_dir/images/$lang_image_file", $lang_name);
-        
+
         $lang_id = $current_language['id'];
 ?>
         <div class="form-group">
             <div class="col-sm-3 control-label">&nbsp;</div>
             <div class="col-sm-9 col-md-6">
                 <div class="input-group">
-                    <span class="input-group-addon"><?php echo $lang_image; ?></span>
-                    <div class="form-control"><strong><?php echo sprintf(TEXT_NEWS_FOR_LANGUAGE, $current_language['name']); ?></strong></div>
+                    <span class="input-group-addon"><?= $lang_image ?></span>
+                    <div class="form-control"><strong><?= sprintf(TEXT_NEWS_FOR_LANGUAGE, $lang_name) ?></strong></div>
                 </div>
-                <span class="help-block"><?php echo TEXT_NEWS_CONTENT_HELP; ?></span>
+                <span class="help-block"><?= TEXT_NEWS_CONTENT_HELP ?></span>
             </div>
         </div>
 
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_TITLE, 'news_title', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_NEWS_TITLE, 'news_title', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <div class="input-group">
-                    <?php echo zen_draw_input_field("news_title[$lang_id]", $nInfo->news_title[$lang_id], $title_max_length . ' class="form-control"'); ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_CONTENT, 'news_content', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9 col-md-6">
-                <div class="input-group">
-                    <?php echo zen_draw_textarea_field("news_content[$lang_id]", 'soft', '100%', '20', $nInfo->news_content[$lang_id], 'class="editorHook form-control" id="ta' . $lang_id . '"'); ?>
+                    <?= zen_draw_input_field("news_title[$lang_id]", $nInfo->news_title[$lang_id], $title_max_length . ' class="form-control"') ?>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_METATAGS_TITLE, 'news_metatags_title', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_NEWS_CONTENT, 'news_content', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <div class="input-group">
-                    <?php echo zen_draw_input_field("news_metatags_title[$lang_id]", $nInfo->news_metatags_title[$lang_id], $metatags_title_max_length . ' class="form-control"'); ?>
+                    <?= zen_draw_textarea_field("news_content[$lang_id]", 'soft', '100%', '20', $nInfo->news_content[$lang_id], 'class="editorHook form-control" id="ta' . $lang_id . '"') ?>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_METATAGS_KEYWORDS, 'news_metatags_keywords', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_NEWS_METATAGS_TITLE, 'news_metatags_title', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <div class="input-group">
-                    <?php echo zen_draw_textarea_field("news_metatags_keywords[$lang_id]", 'soft', '100%', '1', $nInfo->news_metatags_keywords[$lang_id], 'class="noEditor form-control"'); ?>
+                    <?= zen_draw_input_field("news_metatags_title[$lang_id]", $nInfo->news_metatags_title[$lang_id], $metatags_title_max_length . ' class="form-control"') ?>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWS_METATAGS_DESCRIPTION, 'news_metatags_description', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_NEWS_METATAGS_KEYWORDS, 'news_metatags_keywords', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-6">
                 <div class="input-group">
-                    <?php echo zen_draw_textarea_field("news_metatags_description[$lang_id]", 'soft', '100%', '2', $nInfo->news_metatags_description[$lang_id], 'class="noEditor form-control"'); ?>
+                    <?= zen_draw_textarea_field("news_metatags_keywords[$lang_id]", 'soft', '100%', '1', $nInfo->news_metatags_keywords[$lang_id], 'class="noEditor form-control"') ?>
                 </div>
             </div>
         </div>
-                            
+
+        <div class="form-group">
+            <?= zen_draw_label(TEXT_NEWS_METATAGS_DESCRIPTION, 'news_metatags_description', 'class="col-sm-3 control-label"') ?>
+            <div class="col-sm-9 col-md-6">
+                <div class="input-group">
+                    <?= zen_draw_textarea_field("news_metatags_description[$lang_id]", 'soft', '100%', '2', $nInfo->news_metatags_description[$lang_id], 'class="noEditor form-control"') ?>
+                </div>
+            </div>
+        </div>
+
         <hr />
 <?php
     }
@@ -724,19 +722,19 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
 // -----
 // Previewing an article (from the listing) or prior to saving changes via edit/insert ...
 //
-} elseif ($action == 'previewonly' || $action == 'newpreview' || $action == 'updatepreview') {
+} elseif ($action === 'previewonly' || $action === 'newpreview' || $action === 'updatepreview') {
     $cancel_parms = $page_get_params;
     if ($nID > 0) {
         $cancel_parms .= "nID=$nID";
     }
     $cancel_link = zen_href_link($news_box_script_name, $cancel_parms);
-    if ($action == 'previewonly') {
+    if ($action === 'previewonly') {
         $submit_buttons = '';
         $cancel_name = IMAGE_BACK;
     } else {
-        $form_action = ($action == 'updatepreview') ? 'update' : 'insert';
+        $form_action = ($action === 'updatepreview') ? 'update' : 'insert';
         $submit_buttons = zen_draw_form('news', $news_box_script_name, "action=$form_action" . ((empty($page_get_params)) ? '' : "&amp;$page_get_params"));
-        if ($action == 'updatepreview') {
+        if ($action === 'updatepreview') {
             $edit_button_value = 'updateedit';
             $submit_buttons .= zen_draw_hidden_field('nID', $nID);
         } else {
@@ -751,21 +749,21 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
     }
     $news_content_type = $nInfo->news_content_type;
 ?>
-    <hr />
+    <hr>
     <div class="row large">
-        <div class="col-sm-1"><strong><?php echo TEXT_NEWS_TYPE; ?></strong></div>
-        <div class="col-sm-2"><?php echo constant("BOX_NEWS_NAME_TYPE$news_content_type"); ?></div>
+        <div class="col-sm-1"><strong><?= TEXT_NEWS_TYPE ?></strong></div>
+        <div class="col-sm-2"><?= constant("BOX_NEWS_NAME_TYPE$news_content_type") ?></div>
 
-        <div class="col-sm-1"><strong><?php echo TEXT_NEWS_STATUS; ?></strong></div>
-        <div class="col-sm-2"><?php echo ($nInfo->news_status == 0) ? TEXT_DISABLED : TEXT_ENABLED; ?></div>
+        <div class="col-sm-1"><strong><?= TEXT_NEWS_STATUS ?></strong></div>
+        <div class="col-sm-2"><?= ($nInfo->news_status === '0') ? TEXT_DISABLED : TEXT_ENABLED ?></div>
 
-        <div class="col-sm-1"><strong><?php echo TEXT_NEWS_START_DATE; ?></strong></div>
-        <div class="col-sm-2"><?php echo (empty($nInfo->news_start_date)) ? date('Y-m-d') : $nInfo->news_start_date; ?></div>
+        <div class="col-sm-1"><strong><?= TEXT_NEWS_START_DATE ?></strong></div>
+        <div class="col-sm-2"><?= (empty($nInfo->news_start_date)) ? date('Y-m-d') : $nInfo->news_start_date ?></div>
 
-        <div class="col-sm-1"><strong><?php echo TEXT_NEWS_END_DATE; ?></strong></div>
-        <div class="col-sm-2"><?php echo (empty($nInfo->news_end_date)) ? TEXT_NEVER : $nInfo->news_end_date; ?></div>
+        <div class="col-sm-1"><strong><?= TEXT_NEWS_END_DATE ?></strong></div>
+        <div class="col-sm-2"><?= (empty($nInfo->news_end_date)) ? TEXT_NEVER : $nInfo->news_end_date ?></div>
     </div>
-    <hr />
+    <hr>
 <?php
     foreach ($languages as $current_language) {
         $lang_id = $current_language['id'];
@@ -776,53 +774,53 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             $submit_buttons .= zen_draw_hidden_field("news_metatags_keywords[$lang_id]", $nInfo->news_metatags_keywords[$lang_id]);
             $submit_buttons .= zen_draw_hidden_field("news_metatags_description[$lang_id]", $nInfo->news_metatags_description[$lang_id]);
         }
-        
+
         // -----
         // If the news-content doesn't contain any formatting HTML, convert any new-lines to <br>'s so that the on-screen formatting looks "nicer".
         //
         $news_content = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $nInfo->news_content[$lang_id]) ? nl2br($nInfo->news_content[$lang_id]) : $nInfo->news_content[$lang_id]);
-        
+
         // -----
         // Enable the preview display of any images where the admin has specified an image name in either an href="" or src="" attribute
         // using a relocatable form of that name, e.g. src="images/somefile.jpg".
         //
         $news_content = preg_replace(
-            array(
+            [
                 '#href="' . DIR_WS_IMAGES . '#',
                 '#src="' . DIR_WS_IMAGES . '#'
-            ),
-            array(
+            ],
+            [
                 'href="../' . DIR_WS_IMAGES,
                 'src="../' . DIR_WS_IMAGES
-            ),
+            ],
             $news_content
         );
 ?>
     <div class="row">
         <div class="col-sm-6 pageHeading">
-          <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $current_language['directory'] . '/images/' . $current_language['image'], $current_language['name']) . '&nbsp;' . $nInfo->news_title[$lang_id]; ?>
+          <?= zen_image(DIR_WS_CATALOG_LANGUAGES . $current_language['directory'] . '/images/' . $current_language['image'], $current_language['name']) . '&nbsp;' . $nInfo->news_title[$lang_id] ?>
         </div>
     </div>
-    <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-    <div class="row"><?php echo $news_content; ?></div>
-    <hr />
+    <div class="row"><?= zen_draw_separator('pixel_trans.gif', '1', '10') ?></div>
+    <div class="row"><?= $news_content ?></div>
+    <hr>
 
-    <a href="#metatags-<?php echo $lang_id; ?>" class="btn btn-info" data-toggle="collapse"><?php echo TEXT_METATAGS_SHOW_HIDE; ?></a>
-    <div id="metatags-<?php echo $lang_id; ?>" class="collapse">
+    <a href="#metatags-<?= $lang_id ?>" class="btn btn-info" data-toggle="collapse"><?= TEXT_METATAGS_SHOW_HIDE ?></a>
+    <div id="metatags-<?= $lang_id ?>" class="collapse">
         <div class="row nb-padding">
-            <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_TITLE; ?></strong></div>
-            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_title[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_title[$lang_id]; ?></div>
+            <div class="col-sm-2"><strong><?= TEXT_METATAGS_TITLE ?></strong></div>
+            <div class="col-sm-10"><?= empty($nInfo->news_metatags_title[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_title[$lang_id] ?></div>
         </div>
         <div class="row nb-padding">
-            <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_KEYWORDS; ?></strong></div>
-            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_keywords[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_keywords[$lang_id]; ?></div>
+            <div class="col-sm-2"><strong><?= TEXT_METATAGS_KEYWORDS ?></strong></div>
+            <div class="col-sm-10"><?= empty($nInfo->news_metatags_keywords[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_keywords[$lang_id] ?></div>
         </div>
         <div class="row nb-padding">
-            <div class="col-sm-2"><strong><?php echo TEXT_METATAGS_DESCRIPTION; ?></strong></div>
-            <div class="col-sm-10"><?php echo empty($nInfo->news_metatags_description[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_description[$lang_id]; ?></div>
+            <div class="col-sm-2"><strong><?= TEXT_METATAGS_DESCRIPTION ?></strong></div>
+            <div class="col-sm-10"><?= empty($nInfo->news_metatags_description[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_description[$lang_id] ?></div>
         </div>
     </div>
-    <hr />
+    <hr>
 <?php
     }
     
@@ -832,28 +830,28 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $submit_buttons .= '</form>';
     }
 ?>
-   <div class="row text-center"><?php echo $submit_buttons; ?>&nbsp;<a href="<?php echo $cancel_link; ?>" class="btn btn-default" role="button"><?php echo $cancel_name; ?></a></div>
+   <div class="row text-center"><?= $submit_buttons ?>&nbsp;<a href="<?= $cancel_link ?>" class="btn btn-default" role="button"><?= $cancel_name ?></a></div>
 <?php
 // -----
 // No special action _OR_ 'delete', 'copy' or 'move' (which display the right-sidebox for confirmation)?  Display the
 // current listing of news articles.
 //
 } else {
-    $nID = (isset($_GET['nID'])) ? (int)$_GET['nID'] : 0;
-    $news_types = array(
+    $nID = (int)($_GET['nID'] ?? 0);
+    $news_types = [
         0 => 'Undefined',
         1 => BOX_NEWS_NAME_TYPE1,
         2 => BOX_NEWS_NAME_TYPE2,
         3 => BOX_NEWS_NAME_TYPE3,
         4 => BOX_NEWS_NAME_TYPE4
-    );
+    ];
 ?>
-    <p><?php echo TEXT_NEWS_BOX_MANAGER_INFO; ?></p>
+    <p><?= TEXT_NEWS_BOX_MANAGER_INFO ?></p>
 <?php
 // -----
 // Don't render sort/search/editor forms when a sidebox action is active.
 //
-    if ($action == '') {
+    if ($action === '') {
         // -----
         // Choose sort order form.
         //
@@ -861,12 +859,12 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
     <div class="col-md-4">
          <div>
 <?php
-        $sort_choices = array(
-            array('id' => '0', 'text' => NEWS_SORT_START_DESC),
-            array('id' => '1', 'text' => NEWS_SORT_START_ASC),
-            array('id' => '2', 'text' => NEWS_SORT_ENABLED),
-            array('id' => '3', 'text' => NEWS_SORT_DISABLED),
-        );
+        $sort_choices = [
+            ['id' => '0', 'text' => NEWS_SORT_START_DESC],
+            ['id' => '1', 'text' => NEWS_SORT_START_ASC],
+            ['id' => '2', 'text' => NEWS_SORT_ENABLED],
+            ['id' => '3', 'text' => NEWS_SORT_DISABLED],
+        ];
         // toggle switch for editor
         echo zen_draw_form('sort_news_form', $news_box_script_name, '', 'get', 'class="form-horizontal"');
         echo zen_draw_label(TEXT_NEWS_SORT_ORDER, 's', 'class="col-sm-6 col-md-4 control-label"');
@@ -893,19 +891,19 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
 <?php
         echo zen_draw_form('search_news_form', $news_box_script_name, '', 'get', 'class="form-horizontal"');
 ?>
-            <div class="col-sm-6 col-md-4 control-label"><?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search'); ?></div>
-            <div class="col-sm-6 col-md-8"><?php echo zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '') . ' class="form-control"'); ?></div>
-            <div class="col"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '1'); ?></div>
+            <div class="col-sm-6 col-md-4 control-label"><?= zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search') ?></div>
+            <div class="col-sm-6 col-md-8"><?= zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '') . ' class="form-control"') ?></div>
+            <div class="col"><?= zen_draw_separator('pixel_trans.gif', '100%', '1') ?></div>
 <?php
             echo zen_hide_session_id();
             if (!empty($keywords)) {
 ?>
-            <div class="col-sm-6 col-md-4 control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></div>
+            <div class="col-sm-6 col-md-4 control-label"><?= TEXT_INFO_SEARCH_DETAIL_FILTER ?></div>
             <div class="col-sm-6 col-md-8">
 <?php 
                 echo zen_output_string_protected($keywords);
 ?>
-                <a href="<?php echo zen_href_link($news_box_script_name, zen_get_all_get_params(array('action', 'search'))); ?>" class="btn btn-default" role="button"><?php echo IMAGE_RESET; ?></a>
+                <a href="<?= zen_href_link($news_box_script_name, zen_get_all_get_params(['action', 'search'])) ?>" class="btn btn-default" role="button"><?= IMAGE_RESET ?></a>
             </div>
 <?php
             }
@@ -950,24 +948,24 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
 // -----
 // Start table output ...
 ?>
-    <div <?php echo (empty($action)) ? '' : 'class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft"'; ?>>
+    <div <?= (empty($action)) ? '' : 'class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft"' ?>>
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th class="text-center"><?php echo TABLE_HEADING_NEWS_ID; ?></th>
-                    <th><?php echo TABLE_HEADING_NEWS_TITLE; ?></th>
+                    <th class="text-center"><?= TABLE_HEADING_NEWS_ID ?></th>
+                    <th><?= TABLE_HEADING_NEWS_TITLE ?></th>
 <?php
     if ($all_news_types) {
 ?>
-                    <th class="text-center"><?php echo TABLE_HEADING_NEWS_TYPE; ?></th>
+                    <th class="text-center"><?= TABLE_HEADING_NEWS_TYPE ?></th>
 <?php
     }
 ?>
-                    <th class="text-right"><?php echo TABLE_HEADING_NEWS_START; ?></th>
-                    <th class="text-right"><?php echo TABLE_HEADING_NEWS_END; ?></th>
-                    <th class="text-right"><?php echo TABLE_HEADING_MODIFIED; ?></th>
-                    <th class="text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
-                    <th class="text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
+                    <th class="text-right"><?= TABLE_HEADING_NEWS_START ?></th>
+                    <th class="text-right"><?= TABLE_HEADING_NEWS_END ?></th>
+                    <th class="text-right"><?= TABLE_HEADING_MODIFIED ?></th>
+                    <th class="text-center"><?= TABLE_HEADING_STATUS ?></th>
+                    <th class="text-right"><?= TABLE_HEADING_ACTION ?></th>
                 </tr>
             </thead>
 <?php
@@ -1017,40 +1015,40 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
           ORDER BY $order_by";
     $news_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $news_query_raw, $news_query_numrows);
     $news = $db->Execute($news_query_raw);
-    while (!$news->EOF) {
-        $start_date = date('Y-m-d', strtotime($news->fields['news_start_date']));
+    foreach ($news as $next_news) {
+        $start_date = date('Y-m-d', strtotime($next_news['news_start_date']));
         $start_date_class = ($start_date <= date('Y-m-d')) ? 'green' : 'red';
 
-        $end_date_class = ($news->fields['news_end_date'] == null || $news->fields['news_end_date'] >= date('Y-m-d')) ? 'green' : 'red';
-        $news_end_date = ($news->fields['news_end_date'] == null) ? TEXT_NONE : zen_date_short($news->fields['news_end_date']);
-        
-        $link_parms = $page_get_params . 'nID=' . $news->fields['box_news_id'];
-        
+        $end_date_class = ($next_news['news_end_date'] == null || $next_news['news_end_date'] >= date('Y-m-d')) ? 'green' : 'red';
+        $news_end_date = ($next_news['news_end_date'] == null) ? TEXT_NONE : zen_date_short($next_news['news_end_date']);
+
+        $link_parms = $page_get_params . 'nID=' . $next_news['box_news_id'];
+
         $row_class = '';
-        if ($nID == $news->fields['box_news_id']) {
+        if ($nID == $next_news['box_news_id']) {
             $row_class = ' class="info"';
-            $nInfo = new objectInfo($news->fields);
+            $nInfo = new objectInfo($next_news);
         }
 ?>
-            <tr onclick="document.location.href='<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=modify');?>'" role="button"<?php echo $row_class; ?>>
-                <td class="text-center"><?php echo $news->fields['box_news_id']; ?></td>
+            <tr onclick="document.location.href='<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=modify');?>'" role="button"<?= $row_class ?>>
+                <td class="text-center"><?= $next_news['box_news_id'] ?></td>
                 <td>
-                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=previewonly');?>"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<?php echo $news->fields['news_title']; ?>
+                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=previewonly');?>"><?= zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) ?></a>&nbsp;<?= $next_news['news_title'] ?>
                 </td>
 <?php
         if ($all_news_types) {
 ?>
-                <td class="text-center"><?php echo $news_types[$news->fields['news_content_type']]; ?></td>
+                <td class="text-center"><?= $news_types[$next_news['news_content_type']] ?></td>
 <?php
         }
 ?>
-                <td class="text-right"><span class="<?php echo $start_date_class; ?>"><?php echo zen_date_short($news->fields['news_start_date']); ?></span></td>
-                <td class="text-right"><span class="<?php echo $end_date_class; ?>"><?php echo $news_end_date; ?></span></td>
-                <td class="text-right"><?php echo (($news->fields['news_modified_date'] == NULL) ? $news->fields['news_added_date'] : $news->fields['news_modified_date']); ?></td>
+                <td class="text-right"><span class="<?= $start_date_class ?>"><?= zen_date_short($next_news['news_start_date']) ?></span></td>
+                <td class="text-right"><span class="<?= $end_date_class ?>"><?= $news_end_date ?></span></td>
+                <td class="text-right"><?= (($next_news['news_modified_date'] == NULL) ? $next_news['news_added_date'] : $next_news['news_modified_date']) ?></td>
                 <td class="text-center">
 <?php
         echo zen_draw_form('setstatus', $news_box_script_name, $link_parms . '&amp;action=status');
-        if ($news->fields['news_status'] == 0) {
+        if ($next_news['news_status'] == 0) {
             $icon_image = 'icon_red_on.gif';
             $icon_title = IMAGE_ICON_STATUS_OFF;
         } else {
@@ -1058,14 +1056,20 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
             $icon_title = IMAGE_ICON_STATUS_ON;
         }
 ?>
-                    <input type="image" src="<?php echo DIR_WS_IMAGES . $icon_image; ?>" alt="<?php echo $icon_title; ?>" />
+                    <input type="image" src="<?= DIR_WS_IMAGES . $icon_image ?>" alt="<?= $icon_title ?>" />
                 </form></td>
                 <td class="text-right">
-                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=modify'); ?>" style="text-decoration: none">
-                        <div class="fa-stack fa-lg edit"><i class="fa fa-circle fa-stack-2x base"></i><i class="fa fa-pencil fa-stack-1x overlay" aria-hidden="true"></i></div>
+                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=modify') ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg edit">
+                            <i class="fa fa-circle fa-stack-2x base"></i>
+                            <i class="fa fa-pencil fa-stack-1x overlay" aria-hidden="true"></i>
+                        </div>
                     </a>
-                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=delete'); ?>" style="text-decoration: none">
-                        <div class="fa-stack fa-lg delete"><i class="fa fa-circle fa-stack-2x base"></i><i class="fa fa-trash-o fa-stack-1x overlay" aria-hidden="true"></i></div>
+                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=delete') ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg delete">
+                            <i class="fa fa-circle fa-stack-2x base"></i>
+                            <i class="fa fa-trash-o fa-stack-1x overlay" aria-hidden="true"></i>
+                        </div>
                     </a>
 <?php
         // -----
@@ -1074,35 +1078,40 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         //
         if ($all_news_types) {
 ?>
-                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=move'); ?>" style="text-decoration: none">
-                        <div class="fa-stack fa-lg move"><i class="fa fa-circle fa-stack-2x base"></i><i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>M</strong></i></div>
+                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=move') ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg move">
+                            <i class="fa fa-circle fa-stack-2x base"></i>
+                            <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>M</strong></i>
+                        </div>
                     </a>
 <?php
         }
 ?>
-                    <a href="<?php echo zen_href_link($news_box_script_name, $link_parms . '&amp;action=copy'); ?>" style="text-decoration: none">
-                        <div class="fa-stack fa-lg copy"><i class="fa fa-circle fa-stack-2x base"></i><i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>C</strong></i></div>
+                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=copy') ?>" style="text-decoration: none">
+                        <div class="fa-stack fa-lg copy">
+                            <i class="fa fa-circle fa-stack-2x base"></i>
+                            <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>C</strong></i>
+                        </div>
                     </a>
                 </td>
             </tr>
 <?php
-        $news->MoveNext();
     }
 ?>
         </table>
     </div>
 <?php
     if (isset($nInfo)) {
-        $heading = array();
-        $contents = array();
+        $heading = [];
+        $contents = [];
         $cancel_link = '<a href="' . zen_href_link($news_box_script_name, $page_get_params . 'nID=' . $nInfo->box_news_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>';
 
-        $type_selections = array(
-            array('id' => 1, 'text' => BOX_NEWS_NAME_TYPE1),
-            array('id' => 2, 'text' => BOX_NEWS_NAME_TYPE2),
-            array('id' => 3, 'text' => BOX_NEWS_NAME_TYPE3),
-            array('id' => 4, 'text' => BOX_NEWS_NAME_TYPE4)
-        );
+        $type_selections = [
+            ['id' => 1, 'text' => BOX_NEWS_NAME_TYPE1],
+            ['id' => 2, 'text' => BOX_NEWS_NAME_TYPE2],
+            ['id' => 3, 'text' => BOX_NEWS_NAME_TYPE3],
+            ['id' => 4, 'text' => BOX_NEWS_NAME_TYPE4],
+        ];
 
         switch ($action) {
             case 'delete':
@@ -1112,43 +1121,43 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
                 if ($nID < 1) {
                     break;
                 }
-                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_NEWS . '</h4>');
-                
-                $contents = array('form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=deleteconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id));
-                $contents[] = array('text' => TEXT_NEWS_DELETE_INFO);
-                $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> ' . $cancel_link);
+                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_NEWS . '</h4>'];
+
+                $contents = ['form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=deleteconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id)];
+                $contents[] = ['text' => TEXT_NEWS_DELETE_INFO];
+                $contents[] = ['text' => '<strong>' . $nInfo->news_title . '</strong>'];
+                $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> ' . $cancel_link];
                 break;
-                
+
             case 'copy':
-                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_COPY_NEWS . '</h4>');
+                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_COPY_NEWS . '</h4>'];
                 
-                $contents = array('form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=copyconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id));
+                $contents = ['form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=copyconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id)];
  
-                $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
-                $contents[] = array('text' => TEXT_INFO_COPY_ARTICLE);
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_COPY . '</button> ' . $cancel_link);
+                $contents[] = ['text' => '<strong>' . $nInfo->news_title . '</strong>'];
+                $contents[] = ['text' => TEXT_INFO_COPY_ARTICLE];
+                $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_COPY . '</button> ' . $cancel_link];
                 break;
-                
+
             case 'move':
-                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_MOVE_NEWS . '</h4>');
+                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_MOVE_NEWS . '</h4>'];
                 
-                $contents = array('form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=moveconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id));
+                $contents = ['form' => zen_draw_form('news', $news_box_script_name, $page_get_params . 'action=moveconfirm') . zen_draw_hidden_field('nID', $nInfo->box_news_id)];
  
-                $contents[] = array('text' => '<strong>' . $nInfo->news_title . '</strong>');
-                $contents[] = array('text' => TEXT_INFO_MOVE_CHOOSE_TYPE);
-                $contents[] = array('text' => zen_draw_pull_down_menu('news_content_type', $type_selections, $nInfo->news_content_type, 'class="form-control"'));
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_MOVE . '</button> ' . $cancel_link);
+                $contents[] = ['text' => '<strong>' . $nInfo->news_title . '</strong>'];
+                $contents[] = ['text' => TEXT_INFO_MOVE_CHOOSE_TYPE];
+                $contents[] = ['text' => zen_draw_pull_down_menu('news_content_type', $type_selections, $nInfo->news_content_type, 'class="form-control"')];
+                $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_MOVE . '</button> ' . $cancel_link];
                 break;
 
             default:
                 break;
         }
-        
+
         if (!empty($heading) && !empty($contents)) {
             $box = new box;
 ?>
-    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight"><?php echo $box->infoBox($heading, $contents); ?></div>
+    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight"><?= $box->infoBox($heading, $contents) ?></div>
 <?php
         }
     }
@@ -1158,14 +1167,14 @@ if ($action == 'modify' || $action == 'updateedit' || $action == 'new' || $actio
         $news_display_links = '';
     } else {
         $news_display_count = $news_split->display_count($news_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $nbm_page, TEXT_DISPLAY_NUMBER_OF_NEWS);
-        $news_display_links = $news_split->display_links($news_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $nbm_page, zen_get_all_get_params(array('action', 'page', 'nID')));
+        $news_display_links = $news_split->display_links($news_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $nbm_page, zen_get_all_get_params(['action', 'page', 'nID']));
     }
 ?>
     <div class="row text-center">
-        <div class="col-sm-4"><?php echo $news_display_count; ?></div>
-        <div class="col-sm-4"><?php echo $news_display_links; ?></div>
+        <div class="col-sm-4"><?= $news_display_count ?></div>
+        <div class="col-sm-4"><?= $news_display_links ?></div>
         <div class="col-sm-4">
-            <a href="<?php echo zen_href_link($news_box_script_name, $page_get_params . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
+            <a href="<?= zen_href_link($news_box_script_name, $page_get_params . 'action=new') ?>" class="btn btn-primary" role="button"><?= IMAGE_INSERT ?></a>
         </div>
     </div>
 <?php

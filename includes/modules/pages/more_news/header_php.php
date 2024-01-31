@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Copyright (C) 2015-2024, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
@@ -15,4 +15,4 @@
 // performs a "Redirect Permanent" to the 'article' page ... just in case
 // the link was previously bookmarked.
 //
-zen_redirect(zen_href_link(FILENAME_ARTICLE, 'p=' . ((isset($_GET['news_id'])) ? (int)$_GET['news_id'] : 0)), '301');
+zen_redirect(zen_href_link(FILENAME_ARTICLE, 'p=' . (int)($_GET['news_id'] ?? 0)), '301');

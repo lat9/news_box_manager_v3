@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the News Box Manager - v3 plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2020, Vinos de Frutas Tropicales
+// Copyright (C) 2020-2024, Vinos de Frutas Tropicales
 //
 /**
  * Sitemap XML
@@ -42,9 +42,8 @@ if ($sitemapXML->SitemapOpen('boxnews', $last_date)) {
             AND nc.news_title != ''" .
           (SITEMAPXML_BOXNEWS_ORDERBY != '' ? "ORDER BY " . SITEMAPXML_BOXNEWS_ORDERBY : ''));
     $sitemapXML->SitemapSetMaxItems($news->RecordCount());
-    while (!$news->EOF) {
-        $sitemapXML->writeItem(FILENAME_ARTICLE, 'p=' . $news->fields['box_news_id'], $news->fields['language_id'], $news->fields['last_date'], SITEMAPXML_BOXNEWS_CHANGEFREQ);
-        $news->MoveNext();
+    foreach ($news as $next_news) {
+        $sitemapXML->writeItem(FILENAME_ARTICLE, 'p=' . next_news['box_news_id'], $next_news['language_id'], $next_news['last_date'], SITEMAPXML_BOXNEWS_CHANGEFREQ);
     }
     $sitemapXML->SitemapClose();
 }
