@@ -467,49 +467,8 @@ switch ($action) {
 <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 <style>
-.green {
-    color: green;
-}
-.red {
-    color: red;
-}
-.meta-tags {
-    text-align: center;
-    padding: 0.5em 0;
-}
-.large { 
-    font-size: large;
-}
-.larger { 
-    font-size: larger;
-}
-.smaller { 
-    font-size: smaller;
-}
-.nb-padding { 
-    padding: 0.5em;
-}
-
-.edit i.base {
-    color: #008000;
-}
-.delete i.base {
-    color: #f00;
-}
-.move i.base {
-    color: #800080;
-}
-.copy i.base {
-    color: #00f;
-}
-.edit i.overlay,
-.delete i.overlay,
-.move i.overlay,
-.copy i.overlay,
-.attributes-off i.overlay,
-.pricemanager-on i.overlay,
-.metatags-off i.overlay {
-    color: white;
+.p-2 {
+    padding: 0.5rem;
 }
 </style>
 <?php
@@ -547,7 +506,7 @@ switch ($action) {
         break;
 }
 ?>
-    <h1><?= NEWS_BOX_MANAGER_HEADING_TITLE ?> <span class="smaller"><?= $subheading ?></span></h1>
+    <h1><?= NEWS_BOX_MANAGER_HEADING_TITLE ?> <span class="small"><?= $subheading ?></span></h1>
 <?php
 // -----
 // Editing an existing article or inserting a new one ... noting that we can also come back here
@@ -730,7 +689,7 @@ if ($action === 'modify' || $action === 'updateedit' || $action === 'new' || $ac
     $news_content_type = $nInfo->news_content_type;
 ?>
     <hr>
-    <div class="row large">
+    <div class="row h4">
         <div class="col-sm-1"><strong><?= TEXT_NEWS_TYPE ?></strong></div>
         <div class="col-sm-2"><?= constant("BOX_NEWS_NAME_TYPE$news_content_type") ?></div>
 
@@ -787,15 +746,15 @@ if ($action === 'modify' || $action === 'updateedit' || $action === 'new' || $ac
 
     <a href="#metatags-<?= $lang_id ?>" class="btn btn-info" data-toggle="collapse"><?= TEXT_METATAGS_SHOW_HIDE ?></a>
     <div id="metatags-<?= $lang_id ?>" class="collapse">
-        <div class="row nb-padding">
+        <div class="row p-2">
             <div class="col-sm-2"><strong><?= TEXT_METATAGS_TITLE ?></strong></div>
             <div class="col-sm-10"><?= empty($nInfo->news_metatags_title[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_title[$lang_id] ?></div>
         </div>
-        <div class="row nb-padding">
+        <div class="row p-2">
             <div class="col-sm-2"><strong><?= TEXT_METATAGS_KEYWORDS ?></strong></div>
             <div class="col-sm-10"><?= empty($nInfo->news_metatags_keywords[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_keywords[$lang_id] ?></div>
         </div>
-        <div class="row nb-padding">
+        <div class="row p-2">
             <div class="col-sm-2"><strong><?= TEXT_METATAGS_DESCRIPTION ?></strong></div>
             <div class="col-sm-10"><?= empty($nInfo->news_metatags_description[$lang_id]) ? TEXT_NO_METATAGS : $nInfo->news_metatags_description[$lang_id] ?></div>
         </div>
@@ -997,9 +956,9 @@ if ($action === 'modify' || $action === 'updateedit' || $action === 'new' || $ac
     $news = $db->Execute($news_query_raw);
     foreach ($news as $next_news) {
         $start_date = date('Y-m-d', strtotime($next_news['news_start_date']));
-        $start_date_class = ($start_date <= date('Y-m-d')) ? 'green' : 'red';
+        $start_date_class = ($start_date <= date('Y-m-d')) ? 'text-success' : 'text-danger';
 
-        $end_date_class = ($next_news['news_end_date'] == null || $next_news['news_end_date'] >= date('Y-m-d')) ? 'green' : 'red';
+        $end_date_class = ($next_news['news_end_date'] == null || $next_news['news_end_date'] >= date('Y-m-d')) ? 'text-success' : 'text-danger';
         $news_end_date = ($next_news['news_end_date'] == null) ? TEXT_NONE : zen_date_short($next_news['news_end_date']);
 
         $link_parms = $page_get_params . 'nID=' . $next_news['box_news_id'];
@@ -1039,18 +998,13 @@ if ($action === 'modify' || $action === 'updateedit' || $action === 'new' || $ac
                     <input type="image" src="<?= DIR_WS_IMAGES . $icon_image ?>" alt="<?= $icon_title ?>" />
                 </form></td>
                 <td class="text-right">
-                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=modify') ?>" style="text-decoration: none">
-                        <div class="fa-stack fa-lg edit">
-                            <i class="fa fa-circle fa-stack-2x base"></i>
-                            <i class="fa fa-pencil fa-stack-1x overlay" aria-hidden="true"></i>
-                        </div>
-                    </a>
-                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=delete') ?>" style="text-decoration: none">
-                        <div class="fa-stack fa-lg delete">
-                            <i class="fa fa-circle fa-stack-2x base"></i>
-                            <i class="fa fa-trash-o fa-stack-1x overlay" aria-hidden="true"></i>
-                        </div>
-                    </a>
+                    <div class="btn-group">
+                        <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=modify') ?>" class="btn btn-sm btn-default btn-edit" role="button">
+                            <i class="fa fa-solid align-middle fa-pencil fa-lg" aria-hidden="true"></i>
+                        </a>
+                        <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=delete') ?>" class="btn btn-sm btn-default btn-delete" role="button">
+                            <i class="fa fa-solid align-middle fa-trash-o fa-trash-alt fa-lg" aria-hidden="true"></i>
+                        </a>
 <?php
         // -----
         // Don't offer to 'Move' an article if we're not displaying **all** news articles.  The admin might not
@@ -1058,21 +1012,16 @@ if ($action === 'modify' || $action === 'updateedit' || $action === 'new' || $ac
         //
         if ($all_news_types) {
 ?>
-                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=move') ?>" style="text-decoration: none">
-                        <div class="fa-stack fa-lg move">
-                            <i class="fa fa-circle fa-stack-2x base"></i>
-                            <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>M</strong></i>
-                        </div>
-                    </a>
+                        <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=move') ?>" class="btn btn-sm btn-default btn-move" role="button">
+                            <strong>M</strong>
+                        </a>
 <?php
         }
 ?>
-                    <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=copy') ?>" style="text-decoration: none">
-                        <div class="fa-stack fa-lg copy">
-                            <i class="fa fa-circle fa-stack-2x base"></i>
-                            <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>C</strong></i>
-                        </div>
-                    </a>
+                        <a href="<?= zen_href_link($news_box_script_name, $link_parms . '&amp;action=copy') ?>" class="btn btn-sm btn-default btn-copy" role="button">
+                            <strong>C</strong>
+                        </a>
+                    </div>
                 </td>
             </tr>
 <?php
