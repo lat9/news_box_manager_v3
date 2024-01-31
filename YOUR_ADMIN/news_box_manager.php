@@ -42,7 +42,7 @@ if ($news_box_script_name === FILENAME_NEWS_BOX_MANAGER . '.php') {
         exit('Invalid Access.');
     }
     $all_news_types = false;
-    require DIR_WS_LANGUAGES . $_SESSION['language'] . '/news_box_manager.php';
+    require DIR_WS_LANGUAGES . $_SESSION['language'] . '/lang.news_box_manager.php';
     $news_box_name_type = 'BOX_NEWS_NAME_TYPE' . $news_box_type;
     $news_type_name = (defined($news_box_name_type)) ? constant($news_box_name_type) : ($news_box_name_type . TEXT_NEWS_TYPE_NAME_UNKNOWN);
 }
