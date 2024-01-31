@@ -1,6 +1,6 @@
 <?php
 // -----
-// Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
+// Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.8a and later by lat9.
 // Copyright (C) 2015-2024, Vinos de Frutas Tropicales
 //
 // +----------------------------------------------------------------------+
@@ -465,32 +465,29 @@ switch ($action) {
 <!doctype html>
 <html <?= HTML_PARAMS ?>>
 <head>
-<meta charset="<?= CHARSET ?>">
-<title><?= TITLE ?></title>
-<link rel="stylesheet" href="includes/stylesheet.css">
-<link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 <style>
-.green { 
-    color: green; 
+.green {
+    color: green;
 }
-.red { 
-    color: red; 
+.red {
+    color: red;
 }
-.meta-tags { 
-    text-align: center; 
-    padding: 0.5em 0; 
+.meta-tags {
+    text-align: center;
+    padding: 0.5em 0;
 }
 .large { 
-    font-size: large; 
+    font-size: large;
 }
 .larger { 
-    font-size: larger; 
+    font-size: larger;
 }
 .smaller { 
-    font-size: smaller; 
+    font-size: smaller;
 }
 .nb-padding { 
-    padding: 0.5em; 
+    padding: 0.5em;
 }
 
 .edit i.base {
@@ -505,40 +502,23 @@ switch ($action) {
 .copy i.base {
     color: #00f;
 }
-.edit i.overlay, 
-.delete i.overlay, 
-.move i.overlay, 
-.copy i.overlay, 
-.attributes-off i.overlay, 
-.pricemanager-on i.overlay, 
+.edit i.overlay,
+.delete i.overlay,
+.move i.overlay,
+.copy i.overlay,
+.attributes-off i.overlay,
+.pricemanager-on i.overlay,
 .metatags-off i.overlay {
     color: white;
 }
 </style>
-<script src="includes/menu.js"></script>
-<script src="includes/general.js"></script>
-<script>
-<!--
-function init()
-{
-    cssjsmenu('navbar');
-    if (document.getElementById) {
-        var kill = document.getElementById('hoverJS');
-        kill.disabled = true;
-    }
-    if (typeof _editor_url == "string") {
-        HTMLArea.replaceAll();
-    }
-}
-// -->
-</script>
 <?php
 if ($editor_handler !== '') {
     include $editor_handler;
 }
 ?>
 </head>
-<body onload="init();">
+<body>
 <!-- header //-->
 <?php require DIR_WS_INCLUDES . 'header.php'; ?>
 <!-- header_eof //-->
