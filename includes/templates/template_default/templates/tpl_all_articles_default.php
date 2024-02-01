@@ -17,9 +17,13 @@ if (count($news) === 0) {
     <div id="no-news"><p><?= TEXT_NO_NEWS_CURRENTLY ?></p></div>
 <?php
 } else {
+?>
+    <div id="filter-wrapper" class="group row">
+        <div id="all-articles-sort" class="col">
+<?php
     echo
-        zen_draw_form('sorter_form', zen_href_link($_GET['main_page']), 'get') .
-        zen_draw_hidden_field('main_page', $_GET['main_page']) .
+        zen_draw_form('sorter_form', zen_href_link(FILENAME_ALL_ARTICLES), 'get', 'class="form-inline"') .
+        zen_draw_hidden_field('main_page', FILENAME_ALL_ARTICLES) .
         zen_hide_session_id();
 
     $sort_options = [
@@ -30,12 +34,36 @@ if (count($news) === 0) {
     ];
 
     echo zen_draw_label(TEXT_INFO_SORT_BY, 'disp-sort-order');
-    echo zen_draw_pull_down_menu('sort', $sort_options, $nb_sort_order, 'id="disp-sort-order" onchange="this.form.submit();"');
+    echo zen_draw_pull_down_menu('sort', $sort_options, $nb_sort_order, 'class="mx-2" id="disp-sort-order" onchange="this.form.submit();"');
 
     echo '</form>';
 ?>
+        </div>
+        <div id="all-articles-search" class="col">
+<?php
+    echo
+        zen_draw_form('nb-search', zen_href_link(FILENAME_ALL_ARTICLES), 'get', 'class="form-inline"') .
+        zen_draw_hidden_field('main_page', FILENAME_ALL_ARTICLES) .
+        zen_hide_session_id();
+
+    $nb_keyword = zen_output_string_protected($_GET['nb_keyword'] ?? '');
+
+    echo zen_draw_label(TEXT_NEWS_BOX_SEARCH_LABEL, 'nb-keyword', 'class="sr-only"');
+    echo zen_draw_input_field('nb_keyword', $nb_keyword, 'class="mx-2" size="18" maxlength="100" placeholder="' . TEXT_NEWS_BOX_SEARCH_LABEL . '"  aria-label="' . SEARCH_DEFAULT_TEXT . '" id="nb-keyword"');
+
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes') {
+        echo zen_image_submit(BUTTON_IMAGE_SEARCH, HEADER_SEARCH_BUTTON);
+    } else {
+?>
+            <input type="submit" value="<?= HEADER_SEARCH_BUTTON ?>">
+<?php
+    }
+    echo '</form>';
+?>
+        </div>
+    </div>
     <br>
-    <p id="news-info"><?= TEXT_NEWS_BOX_INSTRUCTIONS ?></p>
+    <p id="news-info" class="clearBoth"><?= TEXT_NEWS_BOX_INSTRUCTIONS ?></p>
 <?php
     if (NEWS_BOX_ALL_ARTICLES_DISPLAY === 'Table') {
 ?>

@@ -16,6 +16,8 @@ $define = [
     'TEXT_INFO_NB_SORT_BY_NAME_AZ' => 'Title [A-Z]',
     'TEXT_INFO_NB_SORT_BY_NAME_ZA' => 'Title [Z-A]',
 
+    'TEXT_NEWS_BOX_SEARCH_LABEL' => 'Search titles and content',
+
     'TEXT_DISPLAY_NUMBER_OF_NEWS_ARTICLES' => 'Displaying <strong>%u</strong> to <strong>%u</strong> (of <strong>%u</strong> articles)',
 ];
 return $define;

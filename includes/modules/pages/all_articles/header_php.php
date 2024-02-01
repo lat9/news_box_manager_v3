@@ -52,6 +52,12 @@ switch ($nb_sort_order) {
         break;
 }
 
+if (empty($_GET['nb_keyword'])) {
+    unset($_GET['nb_keyword']);
+} else {
+    $news_and_clause = zen_build_keyword_where_clause(['nc.news_title', 'nc.news_content'], $_GET['nb_keyword']);
+}
+
 $breadcrumb->add(sprintf(NAVBAR_TITLE, $news_type_name));
 
 $max_news_items = NEWS_BOX_SHOW_ARCHIVE;
