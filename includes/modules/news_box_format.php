@@ -11,6 +11,12 @@
 $max_news_items = (((int)$max_news_items) <= 0) ? 10 : $max_news_items;
 $news_box_content_length = (int)$news_box_content_length;
 
+// -----
+// Sorting, added in v3.2.0!  $order_by is set by the all_article page's
+// header *only*!  Default for all other uses (sidebox/centerbox).
+//
+$nb_order_by = $nb_order_by ?? 'n.news_start_date DESC, n.box_news_id DESC';
+
 $news_and_clause = (empty($news_and_clause)) ? '' : $news_and_clause;
 
 $languages_id = (int)$_SESSION['languages_id'];
@@ -27,7 +33,7 @@ if ($news_box_format == 'Individual') {
             $news_and_clause
             AND now() >= n.news_start_date
             AND (n.news_end_date IS NULL OR now() <= n.news_end_date)
-          ORDER BY n.news_start_date DESC, n.box_news_id DESC";
+          ORDER BY $nb_order_by";
 } else {
     $news_limit = '';
     $news_box_query_raw =

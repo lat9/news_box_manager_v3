@@ -32,6 +32,26 @@ switch ($news_type) {
         break;
 }
 
+$nb_sort_order = (int)($_GET['sort'] ?? 0);
+switch ($nb_sort_order) {
+    case 2:
+        $nb_order_by = 'n.news_start_date ASC, n.box_news_id ASC';
+        break;
+    case 3:
+        $nb_order_by = 'nc.news_title ASC, n.box_news_id ASC';
+        break;
+    case 4:
+        $nb_order_by = 'nc.news_title DESC, n.box_news_id DESC';
+        break;
+    default:
+        $nb_order_by = 'n.news_start_date DESC, n.box_news_id DESC';
+        if ($nb_sort_order !== 1) {
+            $nb_sort_order = 1;
+            unset($_GET['sort']);
+        }
+        break;
+}
+
 $breadcrumb->add(sprintf(NAVBAR_TITLE, $news_type_name));
 
 $max_news_items = NEWS_BOX_SHOW_ARCHIVE;

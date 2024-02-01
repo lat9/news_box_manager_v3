@@ -17,9 +17,28 @@ if (count($news) === 0) {
     <div id="no-news"><p><?= TEXT_NO_NEWS_CURRENTLY ?></p></div>
 <?php
 } else {
+    echo
+        zen_draw_form('sorter_form', zen_href_link($_GET['main_page']), 'get') .
+        zen_draw_hidden_field('main_page', $_GET['main_page']) .
+        zen_hide_session_id();
+
+    $sort_options = [
+        ['id' => '1', 'text' => TEXT_INFO_NB_SORT_BY_DATE],
+        ['id' => '2', 'text' => TEXT_INFO_NB_SORT_BY_DATE_DESC],
+        ['id' => '3', 'text' => TEXT_INFO_NB_SORT_BY_NAME_AZ],
+        ['id' => '4', 'text' => TEXT_INFO_NB_SORT_BY_NAME_ZA],
+    ];
+
+    echo zen_draw_label(TEXT_INFO_SORT_BY, 'disp-sort-order');
+    echo zen_draw_pull_down_menu('sort', $sort_options, $nb_sort_order, 'id="disp-sort-order" onchange="this.form.submit();"');
+
+    echo '</form>';
+?>
+    <br>
+    <p id="news-info"><?= TEXT_NEWS_BOX_INSTRUCTIONS ?></p>
+<?php
     if (NEWS_BOX_ALL_ARTICLES_DISPLAY === 'Table') {
 ?>
-    <div id="news-info"><?= TEXT_NEWS_BOX_INFO ?></div>
     <div id="news-table">
         <div class="news-row news-heading">
             <div class="news-cell"><?= NEWS_BOX_HEADING_DATES ?></div>

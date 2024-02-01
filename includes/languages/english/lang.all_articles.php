@@ -9,6 +9,13 @@ $define = [
 
     'TEXT_NO_NEWS_CURRENTLY' => 'We currently have no articles published.  Check back soon!',
 
+    'TEXT_NEWS_BOX_INSTRUCTIONS' => 'You\'re viewing all the latest news from ' . STORE_NAME. '! Click an article\'s title to view its content.',
+
+    'TEXT_INFO_NB_SORT_BY_DATE' => 'Publish Date [newest first]',
+    'TEXT_INFO_NB_SORT_BY_DATE_DESC' => 'Publish Date [oldest first]',
+    'TEXT_INFO_NB_SORT_BY_NAME_AZ' => 'Title [A-Z]',
+    'TEXT_INFO_NB_SORT_BY_NAME_ZA' => 'Title [Z-A]',
+
     'TEXT_DISPLAY_NUMBER_OF_NEWS_ARTICLES' => 'Displaying <strong>%u</strong> to <strong>%u</strong> (of <strong>%u</strong> articles)',
 ];
 return $define;
