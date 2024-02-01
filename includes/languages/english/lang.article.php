@@ -8,16 +8,11 @@
 // | Dedicated to Memory of Amelita "Emmy" Abordo Gelarderes              |
 // +----------------------------------------------------------------------+
 //
-// -----
-// This "instance" of the news sidebox gathers only items configured for the sidebox#2
-// display.
-//
-$news_sidebox_num = 2;
-$news_sidebox_content = NEWS_BOX_SHOW_NEWS_CAT_SB2;
-$news_sidebox_show_max = NEWS_BOX_SHOW_NEWS_SB2;
-$news_sidebox_layout = NEWS_BOX_LAYOUT_SB2;
+$define = [
+    'NAVBAR_TITLE' => 'News',
+    'HEADING_TITLE' => 'News: ',
+    'TEXT_NEWS_PUBLISHED_DATE' => 'Article Date(s):',
 
-$title = '';
-$title_link = '';
-
-require DIR_WS_MODULES . zen_get_module_directory('sideboxes/news_box_sidebox.php');
+    'TEXT_NEWS_ARTICLE_NOT_FOUND' => 'Sorry, that article is no longer available for viewing.  Displaying <em>all</em> articles instead.',
+];
+return $define;

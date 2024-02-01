@@ -1,7 +1,7 @@
 <?php
 // -----
-// Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2020, Vinos de Frutas Tropicales
+// Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.8a and later by lat9.
+// Copyright (C) 2015-2024, Vinos de Frutas Tropicales
 //
 if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
     die('Illegal Access');
@@ -12,7 +12,7 @@ if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
 // a change in the current vs. installed version of the plugin.  Note that if the
 // version is currently '0.0.0', it's an initial installation.
 //
-if (NEWS_BOX_MODULE_VERSION == '0.0.0') {
+if (NEWS_BOX_MODULE_VERSION === '0.0.0') {
     $nb_message = sprintf(NEWS_BOX_INSTALLED, NEWS_BOX_CURRENT_VERSION_DATE);
     $nb_current_version = '0.0.0';
 } else {
@@ -92,7 +92,7 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
     if (!zen_page_key_exists('toolsNewsBox4')) {
         zen_register_admin_page('toolsNewsBox4', 'BOX_NEWS_BOX_MANAGER4', 'FILENAME_NEWS_BOX_MANAGER4', '', 'tools', 'Y');
     }
-    
+
     // -----
     // The 'names' of each of the news' categories were (for v3.0.0-beta1) recorded in the database; they're now in the
     // storefront 'extra_definitions' file, enabling language customization.  Remove them from the database.
@@ -101,15 +101,15 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
         "DELETE FROM " . TABLE_CONFIGURATION . "
           WHERE configuration_key LIKE 'BOX_NEWS_NAME_TYPE%'"
     );
-    
+
     // -----
     // Sidebox configuration changes, as there are now two separately-placed sideboxes.
     //
     $db->Execute(
-        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function ) 
-         VALUES 
-            ('Sideboxes: Date Format', 'NEWS_BOX_SIDEBOX_DATE_FORMAT', 'short', 'Choose the style of dates to be displayed for an article\'s start/end dates when displayed in one of the plugin\'s sideboxes.  Choose <em>short</em> to have dates displayed similar to <b>03/02/2015</b> or <em>long</em> to display the date like <b>Monday 02 March, 2015</b>.<br /><br />The date-related settings you have made in your primary language files are honoured using the built-in functions <code>zen_date_short</code> and <code>zen_date_long</code>, respectively.', $cgi, 50, now(), NULL, 'zen_cfg_select_option(array(\'short\', \'long\'),')"
+        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function )
+         VALUES
+            ('Sideboxes: Date Format', 'NEWS_BOX_SIDEBOX_DATE_FORMAT', 'short', 'Choose the style of dates to be displayed for an article\'s start/end dates when displayed in one of the plugin\'s sideboxes.  Choose <em>short</em> to have dates displayed similar to <b>03/02/2015</b> or <em>long</em> to display the date like <b>Monday 02 March, 2015</b>.<br><br>The date-related settings you have made in your primary language files are honoured using the built-in functions <code>zen_date_short</code> and <code>zen_date_long</code>, respectively.', $cgi, 50, now(), NULL, 'zen_cfg_select_option([\'short\', \'long\'],')"
     );
     $db->Execute(
         "UPDATE " . TABLE_CONFIGURATION . "
@@ -120,34 +120,34 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
           LIMIT 1"
     );
     $db->Execute(
-        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
-         VALUES 
-            ('Sidebox #1: Category to Show', 'NEWS_BOX_SHOW_NEWS_CAT_SB1', 'All', 'Choose the single category (or all news categories) to display for sidebox #1.', $cgi, 41, now(), NULL, 'zen_cfg_select_option(array(\'All\', \'1\', \'2\', \'3\', \'4\'),')"
+        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
+         VALUES
+            ('Sidebox #1: Category to Show', 'NEWS_BOX_SHOW_NEWS_CAT_SB1', 'All', 'Choose the single category (or all news categories) to display for sidebox #1.', $cgi, 41, now(), NULL, 'zen_cfg_select_option([\'All\', \'1\', \'2\', \'3\', \'4\'],')"
     );
     $db->Execute(
-        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
-         VALUES 
-            ('Sidebox #1: Layout', 'NEWS_BOX_LAYOUT_SB1', 'List', 'Choose the formatting layout for <code>news_box_sidebox1</code>, one of:<ol><li><b>List</b>: The titles of the selected articles are displayed in a list-type format.</li><li><b>Grid, Title/Date</b>: The title and date(s) for the selected articles are displayed in a grid format.</li><li><b>Grid, Title/Date/Content</b>: The title, date(s) and a portion of the content are displayed in a grid format.</li></ol>', $cgi, 42, now(), NULL, 'zen_cfg_select_option(array(\'List\', \'GridTitleDate\', \'GridTitleDateDesc\'),')"
+        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
+         VALUES
+            ('Sidebox #1: Layout', 'NEWS_BOX_LAYOUT_SB1', 'List', 'Choose the formatting layout for <code>news_box_sidebox1</code>, one of:<ol><li><b>List</b>: The titles of the selected articles are displayed in a list-type format.</li><li><b>Grid, Title/Date</b>: The title and date(s) for the selected articles are displayed in a grid format.</li><li><b>Grid, Title/Date/Content</b>: The title, date(s) and a portion of the content are displayed in a grid format.</li></ol>', $cgi, 42, now(), NULL, 'zen_cfg_select_option([\'List\', \'GridTitleDate\', \'GridTitleDateDesc\'],')"
     );
     $db->Execute(
-        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
-         VALUES 
+        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
+         VALUES
             ('Sidebox #2: Items to Show', 'NEWS_BOX_SHOW_NEWS_SB2', '0', 'Set the maximum number of the latest-news titles to show in sidebox #2.  If the value is set to <b>0</b>, the sidebox display is disabled.', $cgi, 43, now(), NULL, NULL)"
     );
     $db->Execute(
-        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
-         VALUES 
-            ('Sidebox #2: Category to Show', 'NEWS_BOX_SHOW_NEWS_CAT_SB2', 'All', 'Choose the single category (or all news categories) to display for sidebox #2.', $cgi, 44, now(), NULL, 'zen_cfg_select_option(array(\'All\', \'1\', \'2\', \'3\', \'4\'),')"
+        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
+         VALUES
+            ('Sidebox #2: Category to Show', 'NEWS_BOX_SHOW_NEWS_CAT_SB2', 'All', 'Choose the single category (or all news categories) to display for sidebox #2.', $cgi, 44, now(), NULL, 'zen_cfg_select_option([\'All\', \'1\', \'2\', \'3\', \'4\'],')"
     );
     $db->Execute(
-        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
-         VALUES 
-            ('Sidebox #2: Layout', 'NEWS_BOX_LAYOUT_SB2', 'List', 'Choose the formatting layout for <code>news_box_sidebox2</code>, one of:<ol><li><b>List</b>: The titles of the selected articles are displayed in a list-type format.</li><li><b>Grid, Title/Date</b>: The title and date(s) for the selected articles are displayed in a grid format.</li><li><b>Grid, Title/Date/Content</b>: The title, date(s) and a portion of the content are displayed in a grid format.</li></ol>', $cgi, 45, now(), NULL, 'zen_cfg_select_option(array(\'List\', \'GridTitleDate\', \'GridTitleDateDesc\'),')"
+        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
+         VALUES
+            ('Sidebox #2: Layout', 'NEWS_BOX_LAYOUT_SB2', 'List', 'Choose the formatting layout for <code>news_box_sidebox2</code>, one of:<ol><li><b>List</b>: The titles of the selected articles are displayed in a list-type format.</li><li><b>Grid, Title/Date</b>: The title and date(s) for the selected articles are displayed in a grid format.</li><li><b>Grid, Title/Date/Content</b>: The title, date(s) and a portion of the content are displayed in a grid format.</li></ol>', $cgi, 45, now(), NULL, 'zen_cfg_select_option([\'List\', \'GridTitleDate\', \'GridTitleDateDesc\'],')"
     );
     
     // -----
@@ -168,10 +168,10 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
     );
 
     $db->Execute(
-        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
-         VALUES 
-            ('Home Page: Display Mode', 'NEWS_BOX_HOMEPAGE_DISPLAY', 'Individual', 'Choose the format used to display the home-page news.  The <em>Individual</em> format displays individual articles in a table-type format.  The <em>Categories</em> format displays the most recent article from each news category, with a link to view all articles in that category.', $cgi, 52, now(), NULL, 'zen_cfg_select_option(array(\'Individual\', \'Categories\'),')"
+        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
+         VALUES
+            ('Home Page: Display Mode', 'NEWS_BOX_HOMEPAGE_DISPLAY', 'Individual', 'Choose the format used to display the home-page news.  The <em>Individual</em> format displays individual articles in a table-type format.  The <em>Categories</em> format displays the most recent article from each news category, with a link to view all articles in that category.', $cgi, 52, now(), NULL, 'zen_cfg_select_option([\'Individual\', \'Categories\'],')"
     );
     $db->Execute(
         "UPDATE " . TABLE_CONFIGURATION . "
@@ -191,26 +191,26 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
         "UPDATE " . TABLE_CONFIGURATION . "
             SET configuration_title = 'Article Display: Date Format',
                 configuration_description = 'Choose the style of dates to be displayed for an article\'s start/end dates on the <em>All Articles</em> and <em>Article</em> pages:<ul><li><em>short</em>: Display dates similar to <b>03/02/2015</b>, using the built-in <code>zen_date_short</code>function.</li><li><em>long</em>: Display dates similar to <b>Monday 02 March, 2015</b>, using the built-in <code>zen_date_long</code> function.</li><li><em>MdY</em>: Applies to single-date articles, displays the date similar to <b>Mar 02 2015</b>.  Defaults to the <em>short</em> format if an article\'s ending-date is specified.</li></ul>',
-                set_function = 'zen_cfg_select_option(array(\'MdY\', \'short\', \'long\'),'
+                set_function = 'zen_cfg_select_option([\'MdY\', \'short\', \'long\'],'
           WHERE configuration_key = 'NEWS_BOX_DATE_FORMAT'
           LIMIT 1"
     );
     $db->Execute(
-        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
-         VALUES 
-            ('All Articles: Display Mode', 'NEWS_BOX_ALL_ARTICLES_DISPLAY', 'Table', 'Choose the format used to display the articles on the <code>all_articles</code> page.  The <em>Table</em> format displays the most recent articles in a table-type format.  The <em>Listing</em> format displays the most recent articles in a listing format.', $cgi, 405, now(), NULL, 'zen_cfg_select_option(array(\'Table\', \'Listing\'),')"
+        "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
+         VALUES
+            ('All Articles: Display Mode', 'NEWS_BOX_ALL_ARTICLES_DISPLAY', 'Table', 'Choose the format used to display the articles on the <code>all_articles</code> page.  The <em>Table</em> format displays the most recent articles in a table-type format.  The <em>Listing</em> format displays the most recent articles in a listing format.', $cgi, 405, now(), NULL, 'zen_cfg_select_option([\'Table\', \'Listing\'],')"
     );
     $db->Execute(
         "DELETE FROM " . TABLE_CONFIGURATION . "
           WHERE configuration_key = 'NEWS_BOX_CONTENT_LENGTH'
           LIMIT 1"
     );
-    
+
     // -----
     // Rearranging all configuration settings' sort-orders.
     //
-    $keys_sort_orders = array(
+    $keys_sort_orders = [
         'NEWS_BOX_SHOW_NEWS_SB1' => 100,
         'NEWS_BOX_SHOW_NEWS_CAT_SB1' => 110,
         'NEWS_BOX_LAYOUT_SB1' => 120,
@@ -227,7 +227,7 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
         'BOX_NEWS_NAME_TYPE2' => 1100,
         'BOX_NEWS_NAME_TYPE3' => 1200,
         'BOX_NEWS_NAME_TYPE4' => 1300
-    );
+    ];
     foreach ($keys_sort_orders as $key => $sort_order) {
         $db->Execute(
             "UPDATE " . TABLE_CONFIGURATION . "
@@ -236,7 +236,7 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
               LIMIT 1"
         );
     }
-    
+
     // -----
     // Prior versions of the News Box Manager set numeric-character defaults for its added
     // database tables; clean those up.
@@ -250,7 +250,7 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
             MODIFY `box_news_id` int(11) NOT NULL default 0,
             MODIFY `languages_id` int(11) NOT NULL default 1"
     );
-    
+
     // -----
     // "Reset" any previously-recorded content-type '0' values to be news-content type 1.
     //
@@ -259,7 +259,7 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
             SET news_content_type = 1
           WHERE news_content_type = 0"
     );
-    
+
     // -----
     // Now, the BIG change.  Previous versions of the 'News Box Manager' allowed a multi-language
     // store to record news articles with empty titles and/or content so long as there was one language
@@ -278,7 +278,7 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
           WHERE nb.news_status = 1
           ORDER BY nbc.box_news_id ASC"
     );
-    $news_disabled = array();
+    $news_disabled = [];
     $nbm_logname = DIR_FS_LOGS . '/news_box_manager_articles_disabled.log';
     foreach ($nbm_fixups as $next_check) {
         if (empty(trim($next_check['news_title'])) || empty(trim($next_check['news_content']))) {
@@ -294,7 +294,7 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
             }
         }
     }
-    if (count($news_disabled) != 0) {
+    if (count($news_disabled) !== 0) {
         $messageStack->add_session(sprintf(NEWS_BOX_ARTICLES_DISABLED, $nbm_logname), 'warning');
     }
     unset($nbm_fixups, $next_check);
@@ -303,9 +303,9 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
 $messageStack->add_session($nb_message, 'success');
 zen_record_admin_activity($nb_message, 'warning');
 $db->Execute(
-    "UPDATE " . TABLE_CONFIGURATION . " 
-        SET configuration_value = '" . NEWS_BOX_CURRENT_VERSION_DATE . "', 
-            last_modified = now() 
-      WHERE configuration_key = 'NEWS_BOX_MODULE_VERSION' 
+    "UPDATE " . TABLE_CONFIGURATION . "
+        SET configuration_value = '" . NEWS_BOX_CURRENT_VERSION_DATE . "',
+            last_modified = now()
+      WHERE configuration_key = 'NEWS_BOX_MODULE_VERSION'
       LIMIT 1"
 );

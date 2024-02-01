@@ -1,7 +1,7 @@
 <?php
 // -----
-// Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
-// Copyright (C) 2015-2019, Vinos de Frutas Tropicales
+// Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.8a and later by lat9.
+// Copyright (C) 2015-2024, Vinos de Frutas Tropicales
 //
 if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
     die('Illegal Access');
@@ -20,18 +20,18 @@ if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
 // 70-109 .. Category-specific news settings
 //
 $db->Execute(
-    "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
-        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) 
-     VALUES 
+    "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
+        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
+     VALUES
         ('News Box Manager Version', 'NEWS_BOX_MODULE_VERSION', '0.0.0', 'The News Box Manager version number and release date.', $cgi, 10, now(), NULL, 'trim('),
-        
+
         ('Items to Show in Sidebox', 'NEWS_BOX_SHOW_NEWS', '5', 'Set the maximum number of the latest-news titles to show in the &quot;Latest News&quot; sidebox.', $cgi, 40, now(), NULL, NULL),
 
         ('Items to Show in Home Page', 'NEWS_BOX_SHOW_CENTERBOX', '0', 'Set the maximum number of the latest-news titles to show in the &quot;Latest News&quot; section at the bottom of your home page.  Set the value to 0 to disable the news display.', $cgi, 45, now(), NULL, NULL),
 
         ('News Archive: Items to Display', 'NEWS_BOX_SHOW_ARCHIVE', '10', 'Set the maximum number of the latest-news titles to show on the split-page view of the &quot;News Archive&quot; page.', $cgi, 47, now(), NULL, NULL),
 
-        ('News Archive: Date Format', 'NEWS_BOX_DATE_FORMAT', 'short', 'Choose the style of dates to be displayed for an article\'s start/end dates on the &quot;News Archive&quot; page.  Choose <em>short</em> to have dates displayed similar to <b>03/02/2015</b> or <em>long</em> to display the date like <b>Monday 02 March, 2015</b>.<br /><br />The date-related settings you have made in your primary language files are honoured using the built-in functions <code>zen_date_short</code> and <code>zen_date_long</code>, respectively.', $cgi, 50, now(), NULL, 'zen_cfg_select_option(array(\'short\', \'long\'),'),
+        ('News Archive: Date Format', 'NEWS_BOX_DATE_FORMAT', 'short', 'Choose the style of dates to be displayed for an article\'s start/end dates on the &quot;News Archive&quot; page.  Choose <em>short</em> to have dates displayed similar to <b>03/02/2015</b> or <em>long</em> to display the date like <b>Monday 02 March, 2015</b>.<br /><br />The date-related settings you have made in your primary language files are honoured using the built-in functions <code>zen_date_short</code> and <code>zen_date_long</code>, respectively.', $cgi, 50, now(), NULL, 'zen_cfg_select_option([\'short\', \'long\'],'),
 
         ('Home Page News Content Length', 'NEWS_BOX_CONTENT_LENGTH_CENTERBOX', '0', 'Set the maximum number of characters (an integer value) of each article\'s content to display within the home-page center-box.  Set the value to <em>0</em> to disable the content display or to <em>-1</em> to display each article\'s entire content (no HTML will be stripped).', $cgi, 46, now(), NULL, NULL),
 
