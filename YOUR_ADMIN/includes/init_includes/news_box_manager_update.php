@@ -223,10 +223,6 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
         'NEWS_BOX_SHOW_ARCHIVE' => 400,
         'NEWS_BOX_CONTENT_LENGTH_ARCHIVE' => 410,
         'NEWS_BOX_DATE_FORMAT' => 420,
-        'BOX_NEWS_NAME_TYPE1' => 1000,
-        'BOX_NEWS_NAME_TYPE2' => 1100,
-        'BOX_NEWS_NAME_TYPE3' => 1200,
-        'BOX_NEWS_NAME_TYPE4' => 1300
     ];
     foreach ($keys_sort_orders as $key => $sort_order) {
         $db->Execute(
@@ -298,6 +294,19 @@ if (version_compare($nb_current_version, '3.0.0', '<')) {
         $messageStack->add_session(sprintf(NEWS_BOX_ARTICLES_DISABLED, $nbm_logname), 'warning');
     }
     unset($nbm_fixups, $next_check);
+}
+
+// -----
+// v3.2.0 changes the 'set_function' for the plugin's saved version to
+// use zen_cfg_read_only (so it doesn't get inadvertantly wiped).
+//
+if (version_compare($nb_current_version, '3.2.0', '<')) {
+    $db->Execute(
+        "UPDATE " . TABLE_CONFIGURATION . "
+            SET set_function = 'zen_cfg_read_only('
+          WHERE configuration_key = 'NEWS_BOX_MODULE_VERSION'
+          LIMIT 1"
+    );
 }
 
 $messageStack->add_session($nb_message, 'success');
