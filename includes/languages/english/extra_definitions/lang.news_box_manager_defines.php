@@ -27,6 +27,8 @@ $define = [
     'BOX_NEWS_NAME_TYPE3' => 'Type3',
     'BOX_NEWS_NAME_TYPE4' => 'Type4',
 
+    'BOX_NEWS_SEE_ALL' => 'See All',
+
     'TEXT_NEWS_BOX_INFO' => 'Click an article\'s title to view its content, or click the <em>View All</em> link above to see all the latest news from ' . STORE_NAME . '!',
 ];
 return $define;
