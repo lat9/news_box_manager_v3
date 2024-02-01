@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 <head>
-<meta charset="utf-8" />
-<title>News Box Manager for Zen Cart&reg; v1.5.6 and later</title>
-<link rel="icon" href="../vinos_favicon.ico" type="image/x-icon" />
-<style type="text/css">
-<!--
+<meta charset="utf-8">
+<title>News Box Manager for Zen Cart&reg; v1.5.8a and later</title>
+<link rel="icon" href="../vinos_favicon.ico" type="image/x-icon">
+<style>
 a, a:active, a:visited { color: #006666; text-decoration: none; }
 a:hover { color:#00CC99; text-decoration: underline; }
 body, p, h1, h2, h3, h4, h5, h6, li, td, dd, dt { font-family: Verdana, AvantGarde, Tahoma, Arial, sans-serif; font-size: 10pt; color: black; padding: 0px; margin: 20px; }
@@ -21,29 +20,28 @@ img { margin-left: 20px; max-width: 95%; }
 .smaller { font-size: smaller; }
 .added { color: blue; }
 .removed { text-decoration: line-through; }
--->
 </style>
 </head>
 
 <body>
-<h1>News Box Manager &mdash; for Zen Cart v1.5.6 and Later</h1>
-<h3>Version 3.1.1</h3>
+<h1>News Box Manager &mdash; for Zen Cart v1.5.8a and Later</h1>
+<h3>Version 3.2.0</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?226052-News-Box-Manager-v3-0-0-Support-Thread" target="_blank">News Box Manager v3.0.0 [Support Thread]</a></p>
 <p>GitHub repository: <a href="https://github.com/lat9/news_box_manager_v3" target="_blank">https://github.com/lat9/news_box_manager_v3</a></p>
 <p>This plugin represents a restructuring of the <a href="https://www.zen-cart.com/downloads.php?do=file&id=1968" target="_blank">News Box Manager -- v2.x.x</a> for Zen Cart v1.5.x, enabling the plugin to support current Zen Cart and PHP versions.</p>
-<p>For additional information (including the v3.1.0 integration with <a href="https://www.zen-cart.com/downloads.php?do=file&id=367&styleid=2" target="_blank">Sitemap XML</a>), please refer to the plugin's <a href="https://github.com/lat9/news_box_manager_v3/blob/master/readme.md" target="_blank">online documentation</a>.</p>
+<p>For additional information (including integration with <a href="https://www.zen-cart.com/downloads.php?do=file&id=367&styleid=2" target="_blank">Sitemap XML</a>), please refer to the plugin's <a href="https://github.com/lat9/news_box_manager_v3/wiki" target="_blank">online documentation</a>.</p>
 
 <h2>Purpose</h2>
 <p>This plugin enables you to write news-related content for your Zen Cart store, displaying the most recent articles in sideboxes for your customers to view.</p>
-<p>The plugin adds two side-boxes and an <em>optional</em> home-page center-box with an admin-level news editor to your Zen Cart. You create news articles using the tools provided, e.g. <em>Tools-&gt;News Box Manager [All Types],</em>, which are displayed in the side- and center-boxes (based on your chosen configuration).</p>
+<p>The plugin adds two side-boxes and an <em>optional</em> home-page center-box with an admin-level news editor to your Zen Cart. You create news articles using the tools provided, e.g. <em>Tools :: ;News Box Manager [All Types],</em>, which are displayed in the side- and center-boxes (based on your chosen configuration).</p>
 <p>News articles you write have a <em>Start Date</em> and <em>End Date</em> (which can be set to &quot;--none--&quot;), which determine whether or not the article is displayed to your customers.  Articles are displayed if the article's status is <em>Enabled</em>, the <em>Start Date</em> is on or after the current date and the <em>End Date</em> is either &quot;--none--&quot; or on or before the current date.  That way, you can write an article today that isn't displayed to your customers until sometime next week.</p>
 <p>You can define article-specific <em>metatags</em> using the plugin's admin tool.  Your customizations appear in an article's storefront rendering on the <code>article</code> page.</p>
 
 <h3>Admin Interfaces</h3>
 <p>Once you have copied the admin-level files to your cart's file system, you will see two new menu items:</p>
 <ol>
-  <li><em>Configuration-&gt;News Box Manager [All Types]</em>, where you control the plugin's settings.</li>
-  <li><em>Tools-&gt;News Box Manager</em>, where you write and manage your store's news articles.  If you have an HTML editor installed in your admin, you can use that editor to edit/create your news articles.  If you have multiple languages in your store, you can write language-specific content, too.<br /><br /><b>Note:</b> For previous versions, this tool was located under the &quot;Localization&quot; menu.</li>
+  <li><em>Configuration :: News Box Manager [All Types]</em>, where you control the plugin's settings.</li>
+  <li><em>Tools :: News Box Manager</em>, where you write and manage your store's news articles.  If you have an HTML editor installed in your admin, you can use that editor to edit/create your news articles.  If you have multiple languages in your store, you can write language-specific content, too.<br><br><b>Note:</b> For previous versions, this tool was located under the &quot;Localization&quot; menu.</li>
 </ol>
 
 <h3>Customer Interfaces</h3>
@@ -69,9 +67,9 @@ img { margin-left: 20px; max-width: 95%; }
   <li>Copy the plugin's files to your store's file system.<ol>
     <li>/includes/classes/observers/auto.news_box_manager_metatags.php <span class="smaller">(Added in v2.2.0)</span></li>
     <li>/includes/extra_datafiles/news_box_file_database_names.php</li>
-    <li>/includes/languages/english/all_articles.php</li>
-    <li>/includes/languages/english/article.php</li>
-    <li>/includes/languages/english/extra_definitions/news_box_manager_defines.php</li>
+    <li>/includes/languages/english/lang.all_articles.php</li>
+    <li>/includes/languages/english/lang.article.php</li>
+    <li>/includes/languages/english/extra_definitions/lang.news_box_manager_defines.php</li>
     <li>/includes/modules/news_box_format.php</li>
     <li>/includes/modules/pages/all_articles/header_php.php</li>
     <li>/includes/modules/pages/article/header_php.php</li>
@@ -99,17 +97,17 @@ img { margin-left: 20px; max-width: 95%; }
     <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
     <li>/YOUR_ADMIN/includes/init_includes/news_box_manager_install.php</li>
     <li>/YOUR_ADMIN/includes/init_includes/news_box_manager_update.php</li>
-    <li>/YOUR_ADMIN/includes/languages/english/news_box_manager.php</li>
-    <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/news_box_manager_menu_name.php</li>
+    <li>/YOUR_ADMIN/includes/languages/english/lang.news_box_manager.php</li>
+    <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/lang.news_box_manager_menu_name.php</li>
   </ol></li>
   <li>Click the &quot;Admin Home&quot; link in the admin header; that will cause this plugin's initialization script to run, creating the necessary database tables and configuration items.</li>
   </ol></li>
-  <li>Go to your admin's <em>Configuration-&gt;News Box Manager [All Types]</em> to view and change any settings, then to to <em>Tools-&gt;News Box Manager [All Types]</em> to start writing!</li>
+  <li>Go to your admin's <em>Configuration :: News Box Manager [All Types]</em> to view and change any settings, then to to <em>Tools :: News Box Manager [All Types]</em> to start writing!</li>
 </ol>
 <p>Follow the instructions above if you are <em>upgrading</em>, too.  If you've made <em>template-override</em> versions of the plugin's template-files, you'll need to merge your changes with any updates provided by the plugin itself.</p>
 
 <h2>Un-Installing</h2>
-<p>To un-install this plugin, first remove all the new files introduced by this plugin and restore the <span class="template">template-override</span> file.  Then open the plugin's <code>/uninstall_news_box_manager.sql</code>, copy and paste the file's contents into your admin's <em>Tools-&gt;Install SQL Patches</em> and click &quot;Send&quot;.  That will remove all configuration settings and <em>plugin-specific tables</em> from your database.</p>
+<p>To un-install this plugin, first remove all the new files introduced by this plugin and restore the <span class="template">template-override</span> file.  Then open the plugin's <code>/uninstall_news_box_manager.sql</code>, copy and paste the file's contents into your admin's <em>Tools :: Install SQL Patches</em> and click &quot;Send&quot;.  That will remove all configuration settings and <em>plugin-specific tables</em> from your database.</p>
 
 <h2>Version History</h2>
 <ul>
