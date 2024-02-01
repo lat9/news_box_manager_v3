@@ -33,7 +33,8 @@ img { margin-left: 20px; max-width: 95%; }
 
 <h2>Purpose</h2>
 <p>This plugin enables you to write news-related content for your Zen Cart store, displaying the most recent articles in sideboxes for your customers to view.</p>
-<p>The plugin adds two side-boxes and an <em>optional</em> home-page center-box with an admin-level news editor to your Zen Cart. You create news articles using the tools provided, e.g. <em>Tools :: ;News Box Manager [All Types],</em>, which are displayed in the side- and center-boxes (based on your chosen configuration).</p>
+<p>The plugin provides two side-boxes and an <em>optional</em> home-page center-box with an admin-level news editor to your Zen Cart. You create news articles using the tools provided, e.g. <em>Tools :: News Box Manager [All Types]</em>, which are displayed in the side- and center-boxes (based on your chosen configuration).</p>
+<p><strong>Note:</strong> To include the <em>optional</em> center-box to your home-page, refer to <a href="https://github.com/lat9/news_box_manager_v3/wiki/Adding-the-optional-home%E2%80%90page-centerbox" target="_blank">this</a> Wiki article on the plugin's GitHub repository.</p>
 <p>News articles you write have a <em>Start Date</em> and <em>End Date</em> (which can be set to &quot;--none--&quot;), which determine whether or not the article is displayed to your customers.  Articles are displayed if the article's status is <em>Enabled</em>, the <em>Start Date</em> is on or after the current date and the <em>End Date</em> is either &quot;--none--&quot; or on or before the current date.  That way, you can write an article today that isn't displayed to your customers until sometime next week.</p>
 <p>You can define article-specific <em>metatags</em> using the plugin's admin tool.  Your customizations appear in an article's storefront rendering on the <code>article</code> page.</p>
 
@@ -55,14 +56,11 @@ img { margin-left: 20px; max-width: 95%; }
 <p><strong>Note:</strong> If you have defined <em>metatags</em> for a news-article, those entries (if not empty) will be used instead of the Zen Cart defaults when the article is viewed on the <code>article</code> page.</p>
 
 <h2>Installation</h2>
-<p>This plugin has no <span class="corefile">core-file overwrite</span>, but one <em>optional</em> <span class="template">template-override</span> file; you should <strong>always</strong> backup your cart's database and files prior to making any changes.</p>
+<p>This plugin has no <span class="corefile">core-file overwrite</span>; you should <strong>always</strong> backup your cart's database and files prior to making any changes.</p>
 <ol>
   <li>Unzip the plugin's package file, which you've most likely already done if you're reading this!</li>
   <li>Rename the /YOUR_ADMIN directory to match your Zen Cart's secret admin-folder name.</li>
-  <li>If you want to display your news articles on your storefront home-page:<ol type="a">
-      <li>Rename the one template-override directory (/includes/templates/YOUR_TEMPLATE) to match your cart's active template folder.</li>
-      <li>If you've made previous changes to <span class="template">/includes/templates/YOUR_TEMPLATE/templates/tpl_index_default.php</span>, you'll need to merge those changes with this plugin's updates (one marked section).</li>
-  </ol></li>
+  <li>If you want to display a centerbox of news-articles on your storefront home-page, follow the instructions in this GitHub Wiki <a href="https://github.com/lat9/news_box_manager_v3/wiki/Adding-the-optional-home%E2%80%90page-centerbox" target="_blank">article</a>.</li>
   <li>Log into your Zen Cart's admin-console.</li>
   <li>Copy the plugin's files to your store's file system.<ol>
     <li>/includes/classes/observers/auto.news_box_manager_metatags.php <span class="smaller">(Added in v2.2.0)</span></li>
@@ -83,7 +81,6 @@ img { margin-left: 20px; max-width: 95%; }
     <li>/includes/templates/template_default/templates/tpl_all_articles_default.php</li>
     <li>/includes/templates/template_default/templates/tpl_article_default.php</li>
     <li>/includes/templates/YOUR_TEMPLATE/css/stylesheet_news_box_manager.css</li>
-    <li><em>Optional, see above</em>: <span class="template">/includes/templates/YOUR_TEMPLATE/templates/tpl_index_default.php</span></li>
     <li>/YOUR_ADMIN/news_box_manager.php</li>
     <li>/YOUR_ADMIN/news_box_manager1.php</li>
     <li>/YOUR_ADMIN/news_box_manager2.php</li>
@@ -117,6 +114,7 @@ img { margin-left: 20px; max-width: 95%; }
     <li>BUGFIX: Correct PHP Warning when creating new article in the admin.</li>
     <li>CHANGE: Add publish-date/title sort on the <var>all_articles</var> page.</li>
     <li>CHANGE: Add article-search feature to the <var>all_articles</var> page.</li>
+    <li>CHANGE: Removing sample change for the home-page news centerbox.</li>
     <li>The following files were changed/<span class="added">added</span>/<span class="removed">removed</span>:<ol>
         <li>/includes/classes/observers/auto.news_box_manager_metatags.php</li>
         <li>/includes/extra_datafiles/news_box_file_database_names.php</li>
@@ -139,6 +137,7 @@ img { margin-left: 20px; max-width: 95%; }
         <li>/includes/templates/template_default/templates/tpl_all_articles_default.php</li>
         <li>/includes/templates/template_default/templates/tpl_article_default.php</li>
         <li>/includes/templates/YOUR_TEMPLATE/css/stylesheet_news_box_manager.css</li>
+        <li><span class="removed">/includes/templates/YOUR_TEMPLATE/templates/tpl_index_default.php</span></li>
         <li>/YOUR_ADMIN/news_box_manager.php</li>
         <li>/YOUR_ADMIN/news_box_manager1.php</li>
         <li>/YOUR_ADMIN/news_box_manager2.php</li>
