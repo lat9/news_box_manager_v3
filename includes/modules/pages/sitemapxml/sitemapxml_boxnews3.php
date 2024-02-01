@@ -1,6 +1,6 @@
 <?php
 // -----
-// Part of the News Box Manager - v3 plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
+// Part of the News Box Manager - v3 plugin, re-structured for Zen Cart v1.5.8a and later by lat9.
 // Copyright (C) 2020-2024, Vinos de Frutas Tropicales
 //
 /**

@@ -1,6 +1,6 @@
 <?php
 // -----
-// Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.6 and later by lat9.
+// Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.8a and later by lat9.
 // Copyright (C) 2018-2024, Vinos de Frutas Tropicales
 //
 class zcObserverNewsBoxManagerMetatags extends base
@@ -8,7 +8,7 @@ class zcObserverNewsBoxManagerMetatags extends base
     public function __construct()
     {
         if (!empty($_GET['main_page']) && ($_GET['main_page'] === FILENAME_ALL_ARTICLES || $_GET['main_page'] === FILENAME_ARTICLE)) {
-            $this->attach($this, array('NOTIFY_MODULE_META_TAGS_UNSPECIFIEDPAGE'));
+            $this->attach($this, ['NOTIFY_MODULE_META_TAGS_UNSPECIFIEDPAGE']);
         }
     }
 
