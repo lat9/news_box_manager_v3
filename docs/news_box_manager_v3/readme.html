@@ -113,6 +113,51 @@ img { margin-left: 20px; max-width: 95%; }
 
 <h2>Version History</h2>
 <ul>
+  <li>v3.2.0, 2024-01-31:<ul>
+    <li>CHANGE: Updated to support zc158a (and zc200) as well as PHP 8.2/8.3.</li>
+    <li>BUGFIX: Making <em>See All</em> a language constant.</li>
+    <li>BUGFIX: Correct PHP Warning when creating new article in the admin.</li>
+    <li>The following files were changed/<span class="added">added</span>/<span class="removed">removed</span>:<ol>
+        <li>/includes/classes/observers/auto.news_box_manager_metatags.php</li>
+        <li>/includes/extra_datafiles/news_box_file_database_names.php</li>
+        <li><span class="removed">/includes/languages/english/all_articles.php</span></li>
+        <li><span class="removed">/includes/languages/english/article.php</span></li>
+        <li><span class="added">/includes/languages/english/lang.all_articles.php</span></li>
+        <li><span class="added">/includes/languages/english/lang.article.php</span></li>
+        <li><span class="added">/includes/languages/english/extra_definitions/lang.news_box_manager_defines.php</span></li>
+        <li><span class="removed">/includes/languages/english/extra_definitions/news_box_manager_defines.php</span></li>
+        <li>/includes/modules/news_box_format.php</li>
+        <li>/includes/modules/pages/all_articles/header_php.php</li>
+        <li>/includes/modules/pages/article/header_php.php</li>
+        <li>/includes/modules/pages/more_news/header_php.php</li>
+        <li>/includes/modules/pages/news_archive/header_php.php</li>
+        <li>/includes/modules/pages/sitemapxml/sitemapxml_boxnews3.php</li>
+        <li>/includes/modules/sideboxes/news_box_sidebox.php</li>
+        <li>/includes/modules/sideboxes/news_box_sidebox2.php</li>
+        <li>/includes/templates/template_default/sideboxes/tpl_news_box_sidebox.php</li>
+        <li>/includes/templates/template_default/templates/tpl_modules_news_box_format.php</li>
+        <li>/includes/templates/template_default/templates/tpl_all_articles_default.php</li>
+        <li>/includes/templates/template_default/templates/tpl_article_default.php</li>
+        <li>/includes/templates/YOUR_TEMPLATE/css/stylesheet_news_box_manager.css</li>
+        <li>/YOUR_ADMIN/news_box_manager.php</li>
+        <li>/YOUR_ADMIN/news_box_manager1.php</li>
+        <li>/YOUR_ADMIN/news_box_manager2.php</li>
+        <li>/YOUR_ADMIN/news_box_manager3.php</li>
+        <li>/YOUR_ADMIN/news_box_manager4.php</li>
+        <li>/YOUR_ADMIN/includes/auto_loaders/config.news_box_manager.php</li>
+        <li>/YOUR_ADMIN/includes/classes/observers/NewsBoxManagerAdminObserver.php</li>
+        <li>/YOUR_ADMIN/includes/extra_datafiles/news_box_manager_file_database_names.php</li>
+        <li>/YOUR_ADMIN/includes/extra_datafiles/news_box_manager_sanitization.php</li>
+        <li>/YOUR_ADMIN/includes/functions/news_box_manager_functions.php</li>
+        <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
+        <li>/YOUR_ADMIN/includes/init_includes/news_box_manager_install.php</li>
+        <li>/YOUR_ADMIN/includes/init_includes/news_box_manager_update.php</li>
+        <li><span class="added">/YOUR_ADMIN/includes/languages/english/lang.news_box_manager.php</span></li>
+        <li><span class="removed">/YOUR_ADMIN/includes/languages/english/news_box_manager.php</span></li>
+        <li><span class="added">/YOUR_ADMIN/includes/languages/english/extra_definitions/lang.news_box_manager_menu_name.php</span></li>
+        <li><span class="removed">/YOUR_ADMIN/includes/languages/english/extra_definitions/news_box_manager_menu_name.php</span></li>
+    </ol></li>
+  </ul></li>
   <li>v3.1.1, 2021-05-27:<ul>
     <li>BUGFIX: Clean-up multi-use sidebox/centerbox variables so that they don't affect follow-on display.</li>
     <li>BUGFIX: Correct MySQL fatal error when Home Page Display Mode is 'Categories' on strict MySQL installations.</li>

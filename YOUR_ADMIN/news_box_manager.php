@@ -425,7 +425,7 @@ switch ($action) {
                 $action = ($action === 'newpreview') ? 'newedit' : 'updateedit';
             }
         }
-        $nID = (int)$_POST['nID'];
+        $nID = (int)($_POST['nID'] ?? 0);
         $nInfo = new objectInfo($_POST);
         break;
 
