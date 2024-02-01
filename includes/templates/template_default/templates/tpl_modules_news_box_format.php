@@ -14,7 +14,7 @@ $news_box_format = NEWS_BOX_HOMEPAGE_DISPLAY;
 if ($max_news_items > 0) {
     $news_box_use_split = false;
     require DIR_WS_MODULES . zen_get_module_directory(FILENAME_NEWS_BOX_FORMAT);
-  
+
     if (count($news) > 0) {
         if ($news_box_format === 'Individual') {
 ?>
@@ -59,14 +59,14 @@ if ($max_news_items > 0) {
                 if (isset($news_item['news_content'])) {
                     $nb_content = '<div class="nb-content">' . $news_item['news_content'] . '</div>';
                 }
-                
+
                 $list_box_contents[$row][$col] = array(
                     'params' => 'class="centerBoxContentsNews centeredContent back" style="width:' . $col_width . '%;"',
-                    'text' => 
+                    'text' =>
                         '<div class="nb-inner">' . PHP_EOL .
                         '    <div>' . PHP_EOL .
                         '        <div class="nb-cat nb-back">' . constant('BOX_NEWS_NAME_TYPE' . $news_item['type']) . '</div>' . PHP_EOL .
-                        '        <div class="nb-more nb-forward"><a href="' . zen_href_link(FILENAME_ALL_ARTICLES, 't=' . $news_item['type']) . '">See All</a></div>' . PHP_EOL .
+                        '        <div class="nb-more nb-forward"><a href="' . zen_href_link(FILENAME_ALL_ARTICLES, 't=' . $news_item['type']) . '">' . BOX_NEWS_SEE_ALL . '</a></div>' . PHP_EOL .
                         '    </div>' . PHP_EOL .
                         '    <div class="nb-clear"></div>' . PHP_EOL .
                         '    <a class="nb-title" href="' . zen_href_link(FILENAME_ARTICLE, 'p=' . $news_id) . '">' . $news_item['title'] . '</a>' . PHP_EOL .
