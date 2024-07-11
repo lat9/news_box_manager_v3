@@ -110,7 +110,9 @@ img { margin-left: 20px; max-width: 95%; }
 <ul>
   <li>v3.2.1-beta1, 2024-07-11:<ul>
     <li>BUGFIX: Correct PHP 8.3 Fatal error when generating news additions to SitemapXML.</li>
+    <li>BUGFIX: Correct <samp>article</samp> pages' breadcrumbs to include current article name.</li>
     <li>The following files were changed:<ol>
+        <li>/includes/modules/pages/article/header_php.php</li>
         <li>/includes/modules/pages/sitemapxml/sitemapxml_boxnews3.php</li>
         <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
     </ol></li>

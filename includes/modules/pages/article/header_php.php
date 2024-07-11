@@ -13,7 +13,6 @@ $zco_notifier->notify('NOTIFY_HEADER_ARTICLE_START');
 $_SESSION['navigation']->remove_current_page();
 
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
-$breadcrumb->add(NAVBAR_TITLE);
 
 $news_id = (int)($_GET['p'] ?? 0);
 $languages_id = (int)$_SESSION['languages_id'];
@@ -59,5 +58,8 @@ if (!empty($end_date)) {
 }
 
 $canonicalLink = zen_href_link(FILENAME_ARTICLE, "p=$news_id");
+
+$breadcrumb->add(NAVBAR_TITLE, zen_href_link(FILENAME_ALL_ARTICLES));
+$breadcrumb->add($news_title);
 
 $zco_notifier->notify('NOTIFY_HEADER_ARTICLE_END');
