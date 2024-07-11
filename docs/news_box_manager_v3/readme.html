@@ -25,7 +25,7 @@ img { margin-left: 20px; max-width: 95%; }
 
 <body>
 <h1>News Box Manager &mdash; for Zen Cart v1.5.8a and Later</h1>
-<h3>Version 3.2.0</h3>
+<h3>Version 3.2.1</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?226052-News-Box-Manager-v3-0-0-Support-Thread" target="_blank">News Box Manager v3.0.0 [Support Thread]</a></p>
 <p>GitHub repository: <a href="https://github.com/lat9/news_box_manager_v3" target="_blank">https://github.com/lat9/news_box_manager_v3</a></p>
 <p>This plugin represents a restructuring of the <a href="https://www.zen-cart.com/downloads.php?do=file&id=1968" target="_blank">News Box Manager -- v2.x.x</a> for Zen Cart v1.5.x, enabling the plugin to support current Zen Cart and PHP versions.</p>
@@ -108,6 +108,13 @@ img { margin-left: 20px; max-width: 95%; }
 
 <h2>Version History</h2>
 <ul>
+  <li>v3.2.1-beta1, 2024-07-11:<ul>
+    <li>BUGFIX: Correct PHP 8.3 Fatal error when generating news additions to SitemapXML.</li>
+    <li>The following files were changed:<ol>
+        <li>/includes/modules/pages/sitemapxml/sitemapxml_boxnews3.php</li>
+        <li>/YOUR_ADMIN/includes/init_includes/init_news_box_manager_admin.php</li>
+    </ol></li>
+  </ul></li>
   <li>v3.2.0, 2024-02-05:<ul>
     <li>CHANGE: Updated to support zc158a (and zc200) as well as PHP 8.2/8.3.</li>
     <li>BUGFIX: Making <em>See All</em> a language constant.</li>

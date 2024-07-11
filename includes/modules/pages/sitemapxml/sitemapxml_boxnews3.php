@@ -43,7 +43,7 @@ if ($sitemapXML->SitemapOpen('boxnews', $last_date)) {
           (SITEMAPXML_BOXNEWS_ORDERBY != '' ? "ORDER BY " . SITEMAPXML_BOXNEWS_ORDERBY : ''));
     $sitemapXML->SitemapSetMaxItems($news->RecordCount());
     foreach ($news as $next_news) {
-        $sitemapXML->writeItem(FILENAME_ARTICLE, 'p=' . next_news['box_news_id'], $next_news['language_id'], $next_news['last_date'], SITEMAPXML_BOXNEWS_CHANGEFREQ);
+        $sitemapXML->writeItem(FILENAME_ARTICLE, 'p=' . $next_news['box_news_id'], $next_news['language_id'], $next_news['last_date'], SITEMAPXML_BOXNEWS_CHANGEFREQ);
     }
     $sitemapXML->SitemapClose();
 }
