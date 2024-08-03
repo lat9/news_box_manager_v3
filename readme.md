@@ -1,4 +1,4 @@
-# News Box Manager v3.2.0 for Zen Cart 1.5.8a and later
+# News Box Manager v3.2.1 for Zen Cart 1.5.8a and later
 
 See the plugin's [support-thread](https://www.zen-cart.com/showthread.php?226052-News-Box-Manager-v3-0-0-Support-Thread) on the Zen Cart forums!
 
