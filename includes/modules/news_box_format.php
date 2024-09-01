@@ -3,6 +3,8 @@
 // Part of the News Box Manager plugin, re-structured for Zen Cart v1.5.8a and later by lat9.
 // Copyright (C) 2015-2024, Vinos de Frutas Tropicales
 //
+// Last updated: v3.2.2
+//
 // +----------------------------------------------------------------------+
 // | Do Not Remove: Coded for Zen-Cart by geeks4u.com                     |
 // | Dedicated to Memory of Amelita "Emmy" Abordo Gelarderes              |
@@ -75,6 +77,8 @@ foreach ($news_info as $next_news) {
         $news[$news_box_id]['news_content'] = $next_news['news_content'];
     } elseif ($news_box_content_length > 0) {
         $news[$news_box_id]['news_content'] = zen_trunc_string(zen_clean_html($next_news['news_content']), $news_box_content_length);
+    } else {
+        $news[$news_box_id]['news_content'] = '';
     }
 
     if (!empty($next_news['news_end_date'])) {
