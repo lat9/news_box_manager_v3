@@ -57,7 +57,11 @@ if ($news_box_format == 'Individual') {
 }
 
 if ($news_box_use_split) {
-    $news_split = new splitPageResults($news_box_query_raw, $max_news_items);
+    if (class_exists('zca_splitPageResults')) {
+        $news_split = new zca_splitPageResults($news_box_query_raw, $max_news_items);
+    } else {
+        $news_split = new splitPageResults($news_box_query_raw, $max_news_items);
+    }
     $news_info = $db->Execute($news_split->sql_query);
 } else {
     $news_info = $db->Execute($news_box_query_raw . $news_limit);
